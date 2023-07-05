@@ -1,9 +1,14 @@
 ﻿namespace SuratBook.Data.Models
 {
-    public enum UniversityDegree
+    using System.ComponentModel.DataAnnotations;
+    using static SuratBook.Data.Constants.Constants;
+
+    public class UniversityDegree
     {
-        Doctor = 0,
-        Master = 1,
-        Bachelor = 2
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(DegreeMaxLength, MinimumLength = DegreeMinLength)]
+        public string Name { get; set; } = null!;
     }
 }

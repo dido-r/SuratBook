@@ -1,13 +1,20 @@
-﻿namespace SuratBook.Data.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SuratBook.Data.Models
 {
     public class FriendsRequests
     {
+        [Required]
+        [ForeignKey(nameof(Requester))]
         public Guid RequesterId { get; set; }
 
-        public SuratUser Requester { get; set; } = null!;
+        public FriendRequester Requester { get; set; } = null!;
 
+        [Required]
+        [ForeignKey(nameof(Recipient))]
         public Guid RecipientId { get; set; }
 
-        public SuratUser Recipient { get; set; } = null!;
+        public FriendRecipient Recipient { get; set; } = null!;
     }
 }

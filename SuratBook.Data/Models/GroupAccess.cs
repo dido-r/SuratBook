@@ -1,8 +1,14 @@
 ﻿namespace SuratBook.Data.Models
 {
-    public enum GroupAccess
+    using System.ComponentModel.DataAnnotations;
+    using static SuratBook.Data.Constants.Constants;
+
+    public class GroupAccess
     {
-        Public = 0,
-        Private = 1
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(GroupAccessMaxLength, MinimumLength = GroupAccessMinLength)]
+        public string Name { get; set; } = null!;
     }
 }

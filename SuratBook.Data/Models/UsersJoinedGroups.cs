@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SuratBook.Data.Models
 {
-    public class UsersLikedPhotos
+    public class UsersJoinedGroups
     {
         [Required]
         [ForeignKey(nameof(SuratUser))]
@@ -12,9 +12,9 @@ namespace SuratBook.Data.Models
         public SuratUser SuratUser { get; set; } = null!;
 
         [Required]
-        [ForeignKey(nameof(Photo))]
-        public Guid PhotoId { get; set; }
+        [ForeignKey(nameof(Group))]
+        public Guid GrouptId { get; set; }
 
-        public Photo Photo { get; set; } = null!;
+        public Group Group { get; set; } = null!;
     }
 }

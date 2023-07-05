@@ -1,8 +1,8 @@
 namespace SuratBook.Web
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using SuratBook.Data;
+    using SuratBook.Data.Models;
 
     public class Program
     {
@@ -16,9 +16,16 @@ namespace SuratBook.Web
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<SuratUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<SuratBookDbContext>();
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers();
 
             var app = builder.Build();
 
@@ -41,11 +48,6 @@ namespace SuratBook.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
 
             app.Run();
         }
