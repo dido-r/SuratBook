@@ -22,12 +22,12 @@
         public SuratUser Owner { get; set; } = null!;
 
         [ForeignKey(nameof(Post))]
-        public Guid PostId { get; set; }
+        public Guid? PostId { get; set; }
 
         public Post Post { get; set; } = null!;
 
         [ForeignKey(nameof(Photo))]
-        public Guid PhotoId { get; set; }
+        public Guid? PhotoId { get; set; }
 
         public Photo Photo { get; set; } = null!;
     }

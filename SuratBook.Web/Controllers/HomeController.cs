@@ -1,30 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace SuratBook.Web.Controllers
+﻿namespace SuratBook.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using System.Web.Http.Cors;
+
+    [ApiController]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        [HttpGet]
+        [Route("/")]
+        public string Index()
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View();
+            return "This is the server";
         }
     }
 }

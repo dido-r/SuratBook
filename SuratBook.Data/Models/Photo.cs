@@ -25,7 +25,7 @@ namespace SuratBook.Data.Models
 
         public SuratUser Owner { get; set; } = null!;
 
-        public Guid PostId { get; set; }
+        public Guid? PostId { get; set; }
 
         public Post Post { get; set; } = null!;
 

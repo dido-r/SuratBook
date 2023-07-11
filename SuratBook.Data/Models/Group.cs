@@ -26,7 +26,7 @@
         public SuratUser Owner { get; set; } = null!;
 
         [Required]
-        public GroupAccess Access { get; set; }
+        public GroupAccess Access { get; set; } = null!;
 
         public HashSet<Post> Posts { get; set; } = new HashSet<Post>();
 

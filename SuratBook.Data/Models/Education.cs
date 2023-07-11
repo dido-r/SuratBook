@@ -10,7 +10,7 @@
         [StringLength(UniversityNameMaxLength, MinimumLength = UniversityNameMinLength)]
         public string University { get; set; } = null!;
 
-        public UniversityDegree UniversityDegree { get; set; }
+        public UniversityDegree UniversityDegree { get; set; } = null!;
 
         [StringLength(SchoolNameMaxLength, MinimumLength = SchoolNameMinLength)]
         public string School { get; set; } = null!;

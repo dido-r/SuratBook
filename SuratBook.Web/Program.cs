@@ -1,14 +1,25 @@
 namespace SuratBook.Web
 {
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
     using SuratBook.Data;
     using SuratBook.Data.Models;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.ServiceProviders;
+    using System.Text;
 
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //CORS
+            builder.Services.AddCors(x => x.AddPolicy("cors", z =>
+            {
+                z.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+            }));
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -26,6 +37,31 @@ namespace SuratBook.Web
             })
                 .AddEntityFrameworkStores<SuratBookDbContext>();
             builder.Services.AddControllers();
+
+            //JWT
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                };
+            });
+            builder.Services.AddAuthorization();
+            //
+
+            builder.Services.AddScoped<IUserServices, UserServices>();
 
             var app = builder.Build();
 
@@ -45,9 +81,12 @@ namespace SuratBook.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors("cors");
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllers();
 
             app.Run();
         }

@@ -19,14 +19,14 @@
         public DateTime BirthDate { get; set; }
 
         [ForeignKey(nameof(Location))]
-        public Guid LocationId { get; set; }
+        public Guid? LocationId { get; set; } = null!;
 
-        public Location Location { get; set; } = null!;
+        public Location? Location { get; set; } = null!;
 
         [ForeignKey(nameof(Education))]
-        public Guid EducationId { get; set; }
+        public Guid? EducationId { get; set; } = null!;
 
-        public Education Education { get; set; } = null!;
+        public Education? Education { get; set; } = null!;
 
         [Required]
         public bool Online { get; set; } = true;
