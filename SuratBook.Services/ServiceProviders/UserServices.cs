@@ -28,26 +28,27 @@ namespace SuratBook.Services.ServiceProviders
             configuration = _configuration;
         }
 
-        public async Task<string> LoginUserAsync(LoginUserModel model)
+        public async Task<LoggedUserModel> LoginUserAsync(LoginUserModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email) ?? throw new ArgumentNullException("No user");
             var result = await signInManager.PasswordSignInAsync(model.Email, model.Pass, model.RememberMe, lockoutOnFailure: false);
-            var jwt = GenerateJWT(user);
 
             if (!result.Succeeded)
             {
                 throw new ArgumentNullException("Invalid credentials");
             }
 
-            return jwt;
+            var jwt = GenerateJWT(user);
+
+            return new LoggedUserModel
+            {
+                Id = user.Id.ToString(),
+                Name = $"{user.FirstName} {user.LastName}",
+                Token = jwt,
+            };
         }
 
-        public async Task LogoutUserAsync()
-        {
-            await signInManager.SignOutAsync();
-        }
-
-        public async Task<string> RegiterUserAsync(RegisterUserModel model)
+        public async Task<LoggedUserModel> RegiterUserAsync(RegisterUserModel model)
         {
             var suratUser = new SuratUser
             {
@@ -67,7 +68,29 @@ namespace SuratBook.Services.ServiceProviders
 
             var jwt = GenerateJWT(suratUser);
             await signInManager.SignInAsync(suratUser, isPersistent: false);
-            return jwt;
+
+            return new LoggedUserModel
+            {
+                Id = suratUser.Id.ToString(),
+                Name = $"{suratUser.FirstName} {suratUser.LastName}",
+                Token = jwt,
+            };
+        }
+
+        public async Task<LoggedUserModel> GetCurrentUserAsync(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            return new LoggedUserModel
+            {
+                Id = user.Id.ToString(),
+                Name = $"{user.FirstName} {user.LastName}"
+            };
+        }
+
+        public async Task LogoutUserAsync()
+        {
+            await signInManager.SignOutAsync();
         }
 
         private string GenerateJWT(SuratUser user)

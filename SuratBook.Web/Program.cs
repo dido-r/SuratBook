@@ -18,7 +18,7 @@ namespace SuratBook.Web
             //CORS
             builder.Services.AddCors(x => x.AddPolicy("cors", z =>
             {
-                z.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+                z.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
             }));
 
             // Add services to the container.
@@ -66,16 +66,16 @@ namespace SuratBook.Web
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseMigrationsEndPoint();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseMigrationsEndPoint();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
