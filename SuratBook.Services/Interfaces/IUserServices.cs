@@ -1,4 +1,5 @@
-﻿using SuratBook.Services.Models;
+﻿using Microsoft.AspNetCore.Http;
+using SuratBook.Services.Models.User;
 
 namespace SuratBook.Services.Interfaces
 {
@@ -11,5 +12,9 @@ namespace SuratBook.Services.Interfaces
         Task<LoggedUserModel> GetCurrentUserAsync(string id);
 
         Task LogoutUserAsync();
+
+        void DeleteCookies(HttpResponse response);
+
+        void GenerateCookie(LoggedUserModel user, HttpResponse response);
     }
 }

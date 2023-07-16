@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models;
-using System.Web.Http.Cors;
+using SuratBook.Services.Models.User;
 
 namespace WebApplication2.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
+    //[EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class UserController : ControllerBase
     {
         private IUserServices service;
@@ -17,33 +17,44 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        [Route("api/currentUser")]
+        [Route("currentUser")]
         public async Task<LoggedUserModel> CurrentUser()
         {
-            var id = Request.Cookies["surat_auth"];
+            var id = Request.Cookies["surat_auth"] ?? throw new ArgumentNullException("Invalid user id");
 
-
-            if (id == null)
+            try
             {
-                throw new ArgumentNullException();
+                var reuslt = await service.GetCurrentUserAsync(id);
+                return reuslt;
             }
-
-            return await service.GetCurrentUserAsync(id);
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException(ex.Message);
+            }
         }
 
+        [HttpGet]
+        [Route("test")]
+        public string Test()
+        {
+            return "test";
+        }
+
+
         [HttpPost]
-        [Route("api/login")]
+        [Route("login")]
         public async Task<IActionResult> Login(LoginUserModel model)
         {
             if (!ModelState.IsValid)
             {
-                throw new ArgumentException("Invalid data!");
+                return BadRequest("Invalid credentials");
             }
 
             try
             {
                 var user = await service.LoginUserAsync(model);
-                GenerateCookie(user);
+                var response = Response;
+                service.GenerateCookie(user, response);
                 return Ok("Successful login");
             }
             catch (Exception e)
@@ -53,18 +64,19 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        [Route("api/register")]
+        [Route("register")]
         public async Task<IActionResult> Register(RegisterUserModel model)
         {
             if (!ModelState.IsValid)
             {
-                throw new ArgumentException("Invalid data!");
+                return BadRequest("Invalid credentials");
             }
 
             try
             {
                 var user = await service.RegiterUserAsync(model);
-                GenerateCookie(user);
+                var response = Response;
+                service.GenerateCookie(user, response);
                 return Ok("Successful register");
             }
             catch (Exception e)
@@ -74,53 +86,12 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        [Route("api/logout")]
+        [Route("logout")]
         public async Task Logout()
         {
-            DeleteCookies();
+            var response = Response;
+            service.DeleteCookies(response);
             await service.LogoutUserAsync();
-        }
-
-        private void GenerateCookie(LoggedUserModel user)
-        {
-            var cookieOptions = new CookieOptions()
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(30)
-            };
-
-            var jwtOptions = new CookieOptions()
-            {
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(30)
-            };
-
-            Response.Cookies.Append("surat_auth", user.Id, cookieOptions);
-            Response.Cookies.Append("surat_name", user.Name, cookieOptions);
-            Response.Cookies.Append("surat_token", user.Token, jwtOptions);
-        }
-
-        private void DeleteCookies()
-        {
-            var cookieOptions = new CookieOptions()
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-            };
-
-            var jwtOptions = new CookieOptions()
-            {
-                Secure = true,
-                SameSite = SameSiteMode.None,
-            };
-
-            Response.Cookies.Delete("surat_auth", cookieOptions);
-            Response.Cookies.Delete("surat_name", cookieOptions);
-            Response.Cookies.Delete("surat_token", jwtOptions);
         }
     }
 }

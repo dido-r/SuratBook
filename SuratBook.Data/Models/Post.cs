@@ -15,10 +15,7 @@
         [Required]
         public DateTime CreatedOn { get; set; }
 
-        [ForeignKey(nameof(Photo))]
-        public Guid? PhotoId { get; set; }
-
-        public Photo Photo { get; set; } = null!;
+        public string? DropboxPath { get; set; } = null!;
 
         [Required]
         [ForeignKey(nameof(Owner))]

@@ -12,7 +12,7 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    [Migration("20230710233306_Init")]
+    [Migration("20230716194730_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -387,14 +387,7 @@ namespace SuratBook.Data.Migrations
                     b.Property<int>("Likes")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -422,6 +415,9 @@ namespace SuratBook.Data.Migrations
                         .HasMaxLength(800)
                         .HasColumnType("nvarchar(800)");
 
+                    b.Property<string>("DropboxPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
@@ -431,18 +427,11 @@ namespace SuratBook.Data.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PhotoId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("PhotoId")
-                        .IsUnique()
-                        .HasFilter("[PhotoId] IS NOT NULL");
 
                     b.ToTable("Posts");
                 });
@@ -464,7 +453,6 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("EducationId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -485,7 +473,6 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<Guid?>("LocationId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("LockoutEnabled")
@@ -493,6 +480,9 @@ namespace SuratBook.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("MainPhoto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -802,28 +792,18 @@ namespace SuratBook.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SuratBook.Data.Models.Photo", "Photo")
-                        .WithOne("Post")
-                        .HasForeignKey("SuratBook.Data.Models.Post", "PhotoId");
-
                     b.Navigation("Owner");
-
-                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.SuratUser", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.Education", "Education")
                         .WithMany()
-                        .HasForeignKey("EducationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EducationId");
 
                     b.HasOne("SuratBook.Data.Models.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocationId");
 
                     b.HasOne("SuratBook.Data.Models.SuratUser", null)
                         .WithMany("Friends")
@@ -913,9 +893,6 @@ namespace SuratBook.Data.Migrations
             modelBuilder.Entity("SuratBook.Data.Models.Photo", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Post")
-                        .IsRequired();
 
                     b.Navigation("UsersLikes");
                 });

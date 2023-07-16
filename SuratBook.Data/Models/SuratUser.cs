@@ -15,6 +15,8 @@
         [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength)]
         public string LastName { get; set; } = null!;
 
+        public string? MainPhoto { get; set; } = null!;
+
         [Required]
         public DateTime BirthDate { get; set; }
 

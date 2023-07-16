@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
-
     using SuratBook.Data.Models;
 
     public class SuratBookDbContext : IdentityDbContext<SuratUser, IdentityRole<Guid>, Guid>
@@ -26,6 +25,7 @@
         public DbSet<UsersJoinedGroups> UsersJoinedGroups { get; set; } = null!;
         public DbSet<UsersLikedPhotos> UsersLikedPhotos { get; set; } = null!;
         public DbSet<UsersLikedPosts> UsersLikedPosts { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

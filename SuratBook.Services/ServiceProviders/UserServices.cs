@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SuratBook.Data.Models;
 using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models;
+using SuratBook.Services.Models.User;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -81,6 +82,11 @@ namespace SuratBook.Services.ServiceProviders
         {
             var user = await userManager.FindByIdAsync(id);
 
+            if (user != null)
+            {
+                throw new ArgumentNullException("Invalid id");
+            }
+
             return new LoggedUserModel
             {
                 Id = user.Id.ToString(),
@@ -91,6 +97,40 @@ namespace SuratBook.Services.ServiceProviders
         public async Task LogoutUserAsync()
         {
             await signInManager.SignOutAsync();
+        }
+
+        public void GenerateCookie(LoggedUserModel user, HttpResponse response)
+        {
+            var cookieOptions = new CookieOptions()
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(30)
+            };
+
+            response.Cookies.Append("surat_auth", user.Id, cookieOptions);
+            response.Cookies.Append("surat_name", user.Name, cookieOptions);
+            response.Cookies.Append("surat_token", user.Token, cookieOptions);
+        }
+
+        public void DeleteCookies(HttpResponse response)
+        {
+            var cookieOptions = new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+            };
+
+            var jwtOptions = new CookieOptions()
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+            };
+
+            response.Cookies.Delete("surat_auth", cookieOptions);
+            response.Cookies.Delete("surat_name", cookieOptions);
+            response.Cookies.Delete("surat_token", jwtOptions);
         }
 
         private string GenerateJWT(SuratUser user)
@@ -108,7 +148,7 @@ namespace SuratBook.Services.ServiceProviders
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

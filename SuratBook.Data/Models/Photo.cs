@@ -8,9 +8,6 @@ namespace SuratBook.Data.Models
         public Guid Id { get; set; }
 
         [Required]
-        public string Name { get; set; } = null!;
-
-        [Required]
         public string DropboxId { get; set; } = null!;
 
         [Required]
@@ -24,10 +21,6 @@ namespace SuratBook.Data.Models
         public Guid OwnerId { get; set; }
 
         public SuratUser Owner { get; set; } = null!;
-
-        public Guid? PostId { get; set; }
-
-        public Post Post { get; set; } = null!;
 
         [Required]
         public int Likes { get; set; } = 0;

@@ -1,4 +1,4 @@
-﻿namespace SuratBook.Services.Models
+﻿namespace SuratBook.Services.Models.User
 {
     public class LoggedUserModel
     {

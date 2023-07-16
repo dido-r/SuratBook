@@ -110,9 +110,10 @@ namespace SuratBook.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    MainPhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EducationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Online = table.Column<bool>(type: "bit", nullable: false),
                     SuratUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -142,14 +143,12 @@ namespace SuratBook.Data.Migrations
                         name: "FK_AspNetUsers_Educations_EducationId",
                         column: x => x.EducationId,
                         principalTable: "Educations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Locations_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -330,12 +329,10 @@ namespace SuratBook.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DropboxId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DropboxPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Likes = table.Column<int>(type: "int", nullable: false),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -350,6 +347,34 @@ namespace SuratBook.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Photos_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DropboxPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Posts_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id");
@@ -377,39 +402,6 @@ namespace SuratBook.Data.Migrations
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Posts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Likes = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Posts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Posts_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Posts_Photos_PhotoId",
-                        column: x => x.PhotoId,
-                        principalTable: "Photos",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -633,13 +625,6 @@ namespace SuratBook.Data.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_PhotoId",
-                table: "Posts",
-                column: "PhotoId",
-                unique: true,
-                filter: "[PhotoId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UsersJoinedGroups_GrouptId",
                 table: "UsersJoinedGroups",
                 column: "GrouptId");
@@ -697,10 +682,10 @@ namespace SuratBook.Data.Migrations
                 name: "FriendRequester");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "Photos");
 
             migrationBuilder.DropTable(
-                name: "Photos");
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Groups");

@@ -8,7 +8,7 @@
         public const int LastNameMinLength = 2;
 
         public const int PostMaxLength = 800;
-        public const int PostMinLength = 10;
+        public const int PostMinLength = 1;
 
         public const int CountryMaxLength = 50;
         public const int CountryMinLength = 3;

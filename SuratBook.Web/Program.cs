@@ -62,6 +62,7 @@ namespace SuratBook.Web
             //
 
             builder.Services.AddScoped<IUserServices, UserServices>();
+            builder.Services.AddScoped<IPostServices, PostServices>();
 
             var app = builder.Build();
 

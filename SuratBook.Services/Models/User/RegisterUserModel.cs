@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static SuratBook.Data.Constants.Constants;
-
-namespace SuratBook.Services.Models
+﻿namespace SuratBook.Services.Models.User
 {
+    using System.ComponentModel.DataAnnotations;
+    using static SuratBook.Data.Constants.Constants;
+
     public class RegisterUserModel
     {
         [Required]
