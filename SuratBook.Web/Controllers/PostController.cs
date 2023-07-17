@@ -28,7 +28,47 @@ namespace SuratBook.Web.Controllers
 
             try
             {
-                await services.CreatePostAsync(model);
+                var result = await services.CreatePostAsync(model);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("delete-post")]
+        public async Task<IActionResult> DeletePost(DeletePostModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await services.DeletePostAsync(model);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("edit-post")]
+        public async Task<IActionResult> EditPost(EditPostFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await services.EditPostAsync(model);
             }
             catch (Exception e)
             {

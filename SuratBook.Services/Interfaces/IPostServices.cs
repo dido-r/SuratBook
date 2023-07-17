@@ -4,7 +4,11 @@ namespace SuratBook.Services.Interfaces
 {
     public interface IPostServices
     {
-        Task CreatePostAsync(CreatePostFormModel model);
+        Task<string> CreatePostAsync(CreatePostFormModel model);
+
+        Task EditPostAsync(EditPostFormModel model);
+
+        Task DeletePostAsync(DeletePostModel model);
 
         Task<IEnumerable<PostViewModel>> GetAllPostsAsync();
     }

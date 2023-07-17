@@ -15,7 +15,7 @@
             context = _context;
         }
 
-        public async Task CreatePostAsync(CreatePostFormModel model)
+        public async Task<string> CreatePostAsync(CreatePostFormModel model)
         {
             var post = new Post
             {
@@ -26,12 +26,34 @@
 
             await context.Posts.AddAsync(post);
             await context.SaveChangesAsync();
+            return post.Id.ToString();
         }
+
+        public async Task DeletePostAsync(DeletePostModel model)
+        {
+            var post = await context.Posts.FindAsync(Guid.Parse(model.Id)) ?? throw new ArgumentNullException();
+            context.Posts.Remove(post);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task EditPostAsync(EditPostFormModel model)
+        {
+            var post = await context
+                .Posts
+                .FindAsync(Guid.Parse(model.Id)) ?? throw new NullReferenceException();
+
+            post.Description = model.Description;
+            await context.SaveChangesAsync();
+        }
+
+
 
         public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync()
         {
             var list = await context
                 .Posts
+                .Where(x => !x.IsDeleted)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),

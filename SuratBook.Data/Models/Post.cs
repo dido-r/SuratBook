@@ -26,6 +26,8 @@
         [Required]
         public int Likes { get; set; } = 0;
 
+        public bool IsDeleted { get; set; } = false;
+
         public HashSet<UsersLikedPosts> UsersLikes { get; set; } = new HashSet<UsersLikedPosts>();
 
         public HashSet<Comment> Comments { get; set; } = new HashSet<Comment>();
