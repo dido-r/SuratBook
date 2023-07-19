@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SuratBook.Data;
 using SuratBook.Data.Models;
 using SuratBook.Services.Interfaces;
 using SuratBook.Services.Models.User;
@@ -17,16 +19,19 @@ namespace SuratBook.Services.ServiceProviders
         private readonly UserManager<SuratUser> userManager;
         private readonly IUserStore<SuratUser> userStore;
         private readonly IConfiguration configuration;
+        private readonly SuratBookDbContext context;
 
         public UserServices(SignInManager<SuratUser> _signInManager,
             UserManager<SuratUser> _userManager,
             IUserStore<SuratUser> _userStore,
-            IConfiguration _configuration)
+            IConfiguration _configuration,
+            SuratBookDbContext _context)
         {
             signInManager = _signInManager;
             userManager = _userManager;
             userStore = _userStore;
             configuration = _configuration;
+            context = _context;
         }
 
         public async Task<LoggedUserModel> LoginUserAsync(LoginUserModel model)
@@ -97,6 +102,52 @@ namespace SuratBook.Services.ServiceProviders
         public async Task LogoutUserAsync()
         {
             await signInManager.SignOutAsync();
+        }
+
+        public async Task<UserInfoModel> GetUserInfoAsync(string userId)
+        {
+            var userInfo = await context
+                .Users
+                .Where(x => x.Id.ToString() == userId)
+                .Select(x => new UserInfoModel
+                {
+                    Country = x.Location!.Country,
+                    Town = x.Location!.Town,
+                    Address = x.Location!.Address,
+                    University = x.Education!.University,
+                    UniversityDegreeId = x.Education.UniversityDegreeId,
+                    UniversityDegree = x.Education!.UniversityDegree.Name,
+                    School = x.Education!.School
+                })
+                .FirstOrDefaultAsync();
+
+            return userInfo!;
+        }
+
+        public async Task EditUserInfoAsync(UserInfoFormModel model)
+        {
+            var location = new Location
+            {
+                Town = model.Town,
+                Address = model.Address,
+                Country = model.Country,
+            };
+
+            var education = new Education
+            {
+                University = model.University,
+                UniversityDegreeId = model.UniversityDegree.Id,
+                School = model.School
+            };
+
+            await context.Locations.AddAsync(location);
+            await context.Educations.AddAsync(education);
+            await context.SaveChangesAsync();
+
+            var user = await userManager.FindByIdAsync(model.UserId);
+            user.LocationId = location.Id;
+            user.EducationId = education.Id;
+            await context.SaveChangesAsync();
         }
 
         public void GenerateCookie(LoggedUserModel user, HttpResponse response)

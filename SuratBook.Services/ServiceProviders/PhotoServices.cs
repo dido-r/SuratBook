@@ -31,6 +31,13 @@
             return photo.Id.ToString();
         }
 
+        public async Task DeletePhotoAsync(string id)
+        {
+            var photo = await context.Photos.FindAsync(Guid.Parse(id)) ?? throw new ArgumentNullException();
+            context.Photos.Remove(photo);
+            await context.SaveChangesAsync();
+        }
+
         public async Task<bool> FindByPathAsync(string path)
         {
             return await context

@@ -8,6 +8,8 @@ namespace SuratBook.Services.Interfaces
 
         Task<bool> FindByPathAsync(string path);
 
+        Task DeletePhotoAsync(string id);
+
         Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id);
     }
 }

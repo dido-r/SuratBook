@@ -66,5 +66,21 @@
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        [Route("delete")]
+        public async Task<IActionResult> DeletePhotoAsync([FromBody] string id)
+        {
+            try
+            {
+                await service.DeletePhotoAsync(id);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

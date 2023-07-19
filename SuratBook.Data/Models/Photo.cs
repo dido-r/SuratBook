@@ -25,6 +25,8 @@ namespace SuratBook.Data.Models
         [Required]
         public int Likes { get; set; } = 0;
 
+        public bool IsDeleted { get; set; } = false;
+
         public HashSet<UsersLikedPhotos> UsersLikes { get; set; } = new HashSet<UsersLikedPhotos>();
 
         public HashSet<Comment> Comments { get; set; } = new HashSet<Comment>();

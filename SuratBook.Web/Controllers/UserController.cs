@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
 using SuratBook.Services.Models.User;
 
@@ -6,7 +7,6 @@ namespace WebApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[EnableCors(origins: "http://localhost:3000", headers: "*", methods: "*")]
     public class UserController : ControllerBase
     {
         private IUserServices service;
@@ -32,14 +32,6 @@ namespace WebApplication2.Controllers
                 throw new ArgumentNullException(ex.Message);
             }
         }
-
-        [HttpGet]
-        [Route("test")]
-        public string Test()
-        {
-            return "test";
-        }
-
 
         [HttpPost]
         [Route("login")]
@@ -92,6 +84,29 @@ namespace WebApplication2.Controllers
             var response = Response;
             service.DeleteCookies(response);
             await service.LogoutUserAsync();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("info")]
+        public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
+        {
+            var response = await service.GetUserInfoAsync(userId);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("edit-info")]
+        public async Task<IActionResult> EditUserInfo(UserInfoFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            await service.EditUserInfoAsync(model);
+            return Ok();
         }
     }
 }

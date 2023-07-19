@@ -11,6 +11,10 @@ namespace SuratBook.Services.Interfaces
 
         Task<LoggedUserModel> GetCurrentUserAsync(string id);
 
+        Task<UserInfoModel> GetUserInfoAsync(string userId);
+
+        Task EditUserInfoAsync(UserInfoFormModel model);
+
         Task LogoutUserAsync();
 
         void DeleteCookies(HttpResponse response);

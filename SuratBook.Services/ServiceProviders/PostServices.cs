@@ -46,8 +46,6 @@
             await context.SaveChangesAsync();
         }
 
-
-
         public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync()
         {
             return await context
