@@ -85,5 +85,14 @@ namespace SuratBook.Web.Controllers
             var allPosts = await services.GetAllPostsAsync();
             return Ok(allPosts);
         }
+
+        [HttpGet]
+        [Route("get-my-posts")]
+        public async Task<IActionResult> GetMyPost()
+        {
+            var id = Request.Cookies["surat_auth"] ?? throw new ArgumentNullException("Invalid user id");
+            var myPosts = await services.GetMyPostAsync(id);
+            return Ok(myPosts);
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace SuratBook.Services.Interfaces
 
         Task DeletePostAsync(DeletePostModel model);
 
+        Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id);
+
         Task<IEnumerable<PostViewModel>> GetAllPostsAsync();
     }
 }

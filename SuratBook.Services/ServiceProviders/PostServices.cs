@@ -50,7 +50,7 @@
 
         public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync()
         {
-            var list = await context
+            return await context
                 .Posts
                 .Where(x => !x.IsDeleted)
                 .OrderByDescending(x => x.CreatedOn)
@@ -65,8 +65,25 @@
                     Comments = x.Comments.Count()
                 })
                 .ToListAsync();
+        }
 
-            return list;
+        public async Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id)
+        {
+            return await context
+                .Posts
+                .Where(x => !x.IsDeleted && x.OwnerId.ToString() == id)
+                .OrderByDescending(x => x.CreatedOn)
+                .Select(x => new PostViewModel
+                {
+                    Key = x.Id.ToString(),
+                    Description = x.Description,
+                    DropboxPath = x.DropboxPath,
+                    OwnerId = x.OwnerId.ToString(),
+                    OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    Likes = x.Likes,
+                    Comments = x.Comments.Count()
+                })
+                .ToListAsync();
         }
     }
 }
