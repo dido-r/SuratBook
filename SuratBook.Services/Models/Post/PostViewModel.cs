@@ -11,6 +11,8 @@
         public string OwnerId { get; set; } = null!;
 
         public string OwnerName { get; set; } = null!;
+        //test prop
+        public string? GroupName { get; set; }
 
         public int Likes { get; set; }
 

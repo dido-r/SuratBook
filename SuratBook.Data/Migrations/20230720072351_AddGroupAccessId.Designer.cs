@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuratBook.Data;
 
@@ -11,9 +12,10 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    partial class SuratBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230720072351_AddGroupAccessId")]
+    partial class AddGroupAccessId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,9 +289,6 @@ namespace SuratBook.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("MainPhoto")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -423,7 +422,6 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("GroupId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -790,19 +788,15 @@ namespace SuratBook.Data.Migrations
 
             modelBuilder.Entity("SuratBook.Data.Models.Post", b =>
                 {
-                    b.HasOne("SuratBook.Data.Models.Group", "Group")
+                    b.HasOne("SuratBook.Data.Models.Group", null)
                         .WithMany("Posts")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("SuratBook.Data.Models.SuratUser", "Owner")
                         .WithMany("Posts")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Group");
 
                     b.Navigation("Owner");
                 });

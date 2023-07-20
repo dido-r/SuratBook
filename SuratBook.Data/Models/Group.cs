@@ -26,7 +26,13 @@
         public SuratUser Owner { get; set; } = null!;
 
         [Required]
+        [ForeignKey(nameof(Access))]
+        public int AccessId { get; set; }
+
+        [Required]
         public GroupAccess Access { get; set; } = null!;
+
+        public string? MainPhoto { get; set; }
 
         public HashSet<Post> Posts { get; set; } = new HashSet<Post>();
 

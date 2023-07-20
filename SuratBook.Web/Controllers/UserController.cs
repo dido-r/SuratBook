@@ -16,23 +16,6 @@ namespace WebApplication2.Controllers
             service = _service;
         }
 
-        [HttpGet]
-        [Route("currentUser")]
-        public async Task<LoggedUserModel> CurrentUser()
-        {
-            var id = Request.Cookies["surat_auth"] ?? throw new ArgumentNullException("Invalid user id");
-
-            try
-            {
-                var reuslt = await service.GetCurrentUserAsync(id);
-                return reuslt;
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentNullException(ex.Message);
-            }
-        }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginUserModel model)

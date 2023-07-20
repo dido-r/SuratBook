@@ -23,6 +23,11 @@
 
         public SuratUser Owner { get; set; } = null!;
 
+        [ForeignKey(nameof(Group))]
+        public Guid? GroupId { get; set; } = null!;
+
+        public Group Group { get; set; } = null!;
+
         [Required]
         public int Likes { get; set; } = 0;
 

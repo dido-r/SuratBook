@@ -21,7 +21,8 @@
             {
                 Description = model.Description,
                 DropboxPath = model.DropboxPath,
-                OwnerId = Guid.Parse(model.OwnerId)
+                OwnerId = Guid.Parse(model.OwnerId),
+                GroupId = model.GroupId != null ? Guid.Parse(model.GroupId) : null
             };
 
             await context.Posts.AddAsync(post);
@@ -59,6 +60,7 @@
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
                     Likes = x.Likes,
                     Comments = x.Comments.Count()
                 })

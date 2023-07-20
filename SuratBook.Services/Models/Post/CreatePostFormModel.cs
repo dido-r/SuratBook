@@ -13,5 +13,7 @@
 
         [Required]
         public string OwnerId { get; set; } = null!;
+
+        public string? GroupId { get; set; }
     }
 }

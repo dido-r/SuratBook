@@ -83,22 +83,6 @@ namespace SuratBook.Services.ServiceProviders
             };
         }
 
-        public async Task<LoggedUserModel> GetCurrentUserAsync(string id)
-        {
-            var user = await userManager.FindByIdAsync(id);
-
-            if (user != null)
-            {
-                throw new ArgumentNullException("Invalid id");
-            }
-
-            return new LoggedUserModel
-            {
-                Id = user.Id.ToString(),
-                Name = $"{user.FirstName} {user.LastName}"
-            };
-        }
-
         public async Task LogoutUserAsync()
         {
             await signInManager.SignOutAsync();
@@ -106,18 +90,19 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<UserInfoModel> GetUserInfoAsync(string userId)
         {
+
             var userInfo = await context
                 .Users
                 .Where(x => x.Id.ToString() == userId)
                 .Select(x => new UserInfoModel
                 {
-                    Country = x.Location!.Country,
-                    Town = x.Location!.Town,
-                    Address = x.Location!.Address,
-                    University = x.Education!.University,
-                    UniversityDegreeId = x.Education.UniversityDegreeId,
-                    UniversityDegree = x.Education!.UniversityDegree.Name,
-                    School = x.Education!.School
+                    Country = x.LocationId.HasValue ? x.Location!.Country : null,
+                    Town = x.LocationId.HasValue ? x.Location!.Town : null,
+                    Address = x.LocationId.HasValue ? x.Location!.Address : null,
+                    University = x.EducationId.HasValue ? x.Education!.University : null,
+                    UniversityDegreeId = x.EducationId.HasValue ? x.Education!.UniversityDegreeId : null,
+                    UniversityDegree = x.EducationId.HasValue ? x.Education!.UniversityDegree.Name : null,
+                    School = x.EducationId.HasValue ? x.Education!.School : null
                 })
                 .FirstOrDefaultAsync();
 
