@@ -40,14 +40,42 @@
 
         [HttpGet]
         [Route("owner")]
-        public async Task<IActionResult> GetOwnedGroups()
+        public async Task<IActionResult> GetOwnedGroups([FromQuery] string userId)
         {
-            var userId = GetUserId();
-
             try
             {
                 var groups = await services.GetOwnedGroupsAsync(userId);
                 return Ok(groups);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("joined")]
+        public async Task<IActionResult> GetJoinedGroups([FromQuery] string userId)
+        {
+            try
+            {
+                var groups = await services.GetJoinedGroupAsync(userId);
+                return Ok(groups);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("get-members")]
+        public async Task<IActionResult> GetGroupMember([FromQuery] string groupId)
+        {
+            try
+            {
+                var members = await services.GetGroupMembers(groupId);
+                return Ok(members);
             }
             catch
             {
@@ -113,6 +141,57 @@
             {
                 var data = await services.GetGroupDataAsync(groupId);
                 return Ok(data);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("membership")]
+        public async Task<IActionResult> GroupMembershipCheck([FromQuery] string groupId)
+        {
+            var userId = GetUserId();
+
+            try
+            {
+                var data = await services.IsMember(groupId, userId);
+                return Ok(data);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("join")]
+        public async Task<IActionResult> JoinGroup([FromQuery] string groupId)
+        {
+            var userId = GetUserId();
+
+            try
+            {
+                await services.JoinGroupAsync(groupId, userId);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("leave")]
+        public async Task<IActionResult> LeaveGroup([FromQuery] string groupId)
+        {
+            var userId = GetUserId();
+
+            try
+            {
+                await services.LeaveGroupAsync(groupId, userId);
+                return Ok();
             }
             catch
             {

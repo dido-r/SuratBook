@@ -104,5 +104,64 @@ namespace SuratBook.Services.ServiceProviders
                })
                .ToListAsync();
         }
+
+        public async Task<bool> IsMember(string groupId, string userId)
+        {
+            return await context
+                .UsersJoinedGroups
+                .AnyAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId);
+        }
+
+        public async Task JoinGroupAsync(string groupId, string userId)
+        {
+            var join = new UsersJoinedGroups
+            {
+                GrouptId = Guid.Parse(groupId),
+                SuratUserId = Guid.Parse(userId)
+            };
+
+            await context.AddAsync(join);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task LeaveGroupAsync(string groupId, string userId)
+        {
+            var pair = await context
+                .UsersJoinedGroups
+                .FirstOrDefaultAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId) ?? throw new ArgumentNullException();
+
+            context.Remove(pair);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<GroupViewModel>> GetJoinedGroupAsync(string userId)
+        {
+            return await context
+                .UsersJoinedGroups
+                .Where(x => x.SuratUserId.ToString() == userId)
+                .Select(x => new GroupViewModel
+                {
+                    Id = x.GrouptId.ToString(),
+                    Name = x.Group.Name,
+                    GroupInfo = x.Group.GroupInfo,
+                    MainPhoto = x.Group.MainPhoto!,
+                    OwnerId = x.Group.OwnerId.ToString(),
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<GroupMembersViewModel>> GetGroupMembers(string groupId)
+        {
+            return await context
+            .UsersJoinedGroups
+            .Where(x => x.GrouptId.ToString() == groupId)
+            .Select(x => new GroupMembersViewModel
+            {
+                Id = x.SuratUserId.ToString(),
+                Name = $"{x.SuratUser.FirstName} {x.SuratUser.LastName}",
+                DropboxPath = x.SuratUser.MainPhoto!
+            })
+            .ToListAsync();
+        }
     }
 }

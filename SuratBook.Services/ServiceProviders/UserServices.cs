@@ -135,6 +135,19 @@ namespace SuratBook.Services.ServiceProviders
             await context.SaveChangesAsync();
         }
 
+        public async Task<LoggedUserModel> GetUserNameAsync(string userId)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            return new LoggedUserModel
+            {
+                Id = user!.Id.ToString(),
+                Name = $"{user.FirstName} {user.LastName}"
+            };
+        }
+
         public void GenerateCookie(LoggedUserModel user, HttpResponse response)
         {
             var cookieOptions = new CookieOptions()

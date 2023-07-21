@@ -91,5 +91,14 @@ namespace WebApplication2.Controllers
             await service.EditUserInfoAsync(model);
             return Ok();
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("get-name")]
+        public async Task<IActionResult> GetUserName([FromQuery] string userId)
+        {
+            var user = await service.GetUserNameAsync(userId);
+            return Ok(user);
+        }
     }
 }

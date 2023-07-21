@@ -13,6 +13,16 @@ namespace SuratBook.Services.Interfaces
 
         Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId);
 
+        Task<bool> IsMember(string groupId, string userId);
+
+        Task JoinGroupAsync(string groupId, string userId);
+
+        Task LeaveGroupAsync(string groupId, string userId);
+
+        Task<IEnumerable<GroupViewModel>> GetJoinedGroupAsync(string userId);
+
+        Task<IEnumerable<GroupMembersViewModel>> GetGroupMembers(string groupId);
+
         Task EditGroupInfoAsync(GroupInfoEditformModel model);
 
         Task<GroupViewModel> GetGroupDataAsync(string groupId);
