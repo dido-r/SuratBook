@@ -234,7 +234,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasIndex("SuratUserId");
 
-                    b.ToTable("FriendRecipient");
+                    b.ToTable("FriendsRecipients");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.FriendRequester", b =>
@@ -250,7 +250,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasIndex("SuratUserId");
 
-                    b.ToTable("FriendRequester");
+                    b.ToTable("FriendsRequesters");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.FriendsRequests", b =>

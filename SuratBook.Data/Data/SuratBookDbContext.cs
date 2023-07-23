@@ -22,6 +22,8 @@
         public DbSet<GroupAccess> GroupAccess { get; set; } = null!;
         public DbSet<UniversityDegree> UniversityDegrees { get; set; } = null!;
         public DbSet<FriendsRequests> FriendsRequests { get; set; } = null!;
+        public DbSet<FriendRequester> FriendsRequesters { get; set; } = null!;
+        public DbSet<FriendRecipient> FriendsRecipients { get; set; } = null!;
         public DbSet<UsersJoinedGroups> UsersJoinedGroups { get; set; } = null!;
         public DbSet<UsersLikedPhotos> UsersLikedPhotos { get; set; } = null!;
         public DbSet<UsersLikedPosts> UsersLikedPosts { get; set; } = null!;

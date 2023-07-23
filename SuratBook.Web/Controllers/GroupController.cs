@@ -199,6 +199,21 @@
             }
         }
 
+        [HttpGet]
+        [Route("get-media")]
+        public async Task<IActionResult> GetGroupMediaFiles([FromQuery] string id)
+        {
+            try
+            {
+                var files = await services.GetGroupMediaFilesAsync(id);
+                return Ok(files);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

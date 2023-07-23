@@ -163,5 +163,20 @@ namespace SuratBook.Services.ServiceProviders
             })
             .ToListAsync();
         }
+
+        public async Task<IEnumerable<GroupMediaViewModel>> GetGroupMediaFilesAsync(string groupId)
+        {
+            return await context
+                .Posts
+                .Where(x => x.GroupId.ToString() == groupId)
+                .Select(x => new GroupMediaViewModel
+                {
+                    Id = x.Id.ToString(),
+                    Description = x.Description,
+                    DropboxPath = x.DropboxPath!,
+                    Likes = x.Likes,
+                    Comments = x.Comments.Count()
+                }).ToListAsync();
+        }
     }
 }

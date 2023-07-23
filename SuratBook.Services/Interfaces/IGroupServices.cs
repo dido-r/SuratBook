@@ -26,5 +26,7 @@ namespace SuratBook.Services.Interfaces
         Task EditGroupInfoAsync(GroupInfoEditformModel model);
 
         Task<GroupViewModel> GetGroupDataAsync(string groupId);
+
+        Task<IEnumerable<GroupMediaViewModel>> GetGroupMediaFilesAsync(string groupId);
     }
 }
