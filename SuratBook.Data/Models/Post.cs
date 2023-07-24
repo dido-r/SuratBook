@@ -28,8 +28,7 @@
 
         public Group Group { get; set; } = null!;
 
-        [Required]
-        public int Likes { get; set; } = 0;
+        public int Likes => Comments.Count;
 
         public bool IsDeleted { get; set; } = false;
 

@@ -56,8 +56,9 @@
                     Key = x.Id.ToString(),
                     DropboxId = x.DropboxId,
                     DropboxPath = x.DropboxPath,
-                    Likes = x.Likes,
+                    Likes = x.UsersLikes.Count,
                     OwnerId = x.OwnerId.ToString(),
+                    Comments = x.Comments.Count
                 }).ToListAsync();
         }
     }

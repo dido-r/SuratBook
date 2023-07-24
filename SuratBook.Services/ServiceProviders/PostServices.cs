@@ -61,8 +61,8 @@
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
                     GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
-                    Likes = x.Likes,
-                    Comments = x.Comments.Count()
+                    Likes = x.UsersLikes.Count,
+                    Comments = x.Comments.Count
                 })
                 .ToListAsync();
         }
@@ -80,8 +80,8 @@
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
-                    Likes = x.Likes,
-                    Comments = x.Comments.Count()
+                    Likes = x.UsersLikes.Count,
+                    Comments = x.Comments.Count
                 })
                 .ToListAsync();
         }

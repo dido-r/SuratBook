@@ -64,11 +64,29 @@
 
         [HttpGet]
         [Route("my-friends")]
-        public IActionResult GetFriends()
+        public async Task<IActionResult> GetFriends()
         {
             var userId = GetUserId();
-            //TO DO
+            var friendList = await services.GetFriendsAsync(userId);
+            return Ok(friendList);
+        }
+
+        [HttpPost]
+        [Route("remove")]
+        public async Task<IActionResult> RemoveFriend([FromQuery] string friendId)
+        {
+            var userId = GetUserId();
+            await services.RemoveFriendAsync(userId, friendId);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("check-friendship")]
+        public async Task<IActionResult> CheckFriendship([FromQuery] string friendId)
+        {
+            var userId = GetUserId();
+            var response = await services.CheckFriendship(userId, friendId);
+            return Ok(response);
         }
 
         private string GetUserId()

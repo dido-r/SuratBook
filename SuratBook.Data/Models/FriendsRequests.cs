@@ -16,5 +16,8 @@ namespace SuratBook.Data.Models
         public Guid RecipientId { get; set; }
 
         public FriendRecipient Recipient { get; set; } = null!;
+
+        [Required]
+        public bool AreFriends { get; set; } = false;
     }
 }

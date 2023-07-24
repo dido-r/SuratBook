@@ -39,8 +39,6 @@
 
         public HashSet<Photo> Photos { get; set; } = new HashSet<Photo>();
 
-        public HashSet<SuratUser> Friends { get; set; } = new HashSet<SuratUser>();
-
         public HashSet<Group> OwnedGroups { get; set; } = new HashSet<Group>();
 
         public HashSet<FriendRequester> SentFriendsRequests { get; set; } = new HashSet<FriendRequester>();

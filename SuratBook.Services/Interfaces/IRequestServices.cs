@@ -4,16 +4,20 @@
 
     public interface IRequestServices
     {
-        Task<IEnumerable<FiendViewModel>> GetAllSuggestionsAsync(string userId);
+        Task<IEnumerable<FriendViewModel>> GetAllSuggestionsAsync(string userId);
 
         Task SendRequestAsync(string userId, string friendId);
 
         Task AddFriendAsync(string userId, string friendId);
 
-        Task<IEnumerable<FiendViewModel>> GetSentRequestAsync(string userId);
+        Task<IEnumerable<FriendViewModel>> GetSentRequestAsync(string userId);
 
-        Task<IEnumerable<FiendViewModel>> GetFriendInvitationsAsync(string userId);
+        Task<IEnumerable<FriendViewModel>> GetFriendInvitationsAsync(string userId);
 
-        IEnumerable<FiendViewModel> GetFriends(string userId);
+        Task<IEnumerable<FriendViewModel>> GetFriendsAsync(string userId);
+
+        Task RemoveFriendAsync(string userId, string friendId);
+
+        Task<string> CheckFriendship(string userId, string friendId);
     }
 }

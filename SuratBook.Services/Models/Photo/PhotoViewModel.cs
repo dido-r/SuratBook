@@ -11,5 +11,7 @@
         public string OwnerId { get; set; } = null!;
 
         public int Likes { get; set; }
+
+        public int Comments { get; set; }
     }
 }

@@ -42,36 +42,36 @@
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<FiendViewModel>> GetAllSuggestionsAsync(string userId)
+        public async Task<IEnumerable<FriendViewModel>> GetAllSuggestionsAsync(string userId)
         {
             return await context
                 .Users
-                .Where(x => x.Id.ToString() != userId && !x.Friends.Any(z => z.Id.ToString() == userId) && !x.ReceivedFriendsRequests.Any(z => z.SuratUserId == x.Id) && !x.SentFriendsRequests.Any(z => z.SuratUserId == x.Id))
-                .Select(x => new FiendViewModel
+                .Where(x => x.Id.ToString() != userId && !x.ReceivedFriendsRequests.Any(z => z.SuratUserId == x.Id) && !x.SentFriendsRequests.Any(z => z.SuratUserId == x.Id))
+                .Select(x => new FriendViewModel
                 {
                     Id = x.Id.ToString(),
                     Name = $"{x.FirstName} {x.LastName}",
                 }).ToListAsync();
         }
 
-        public async Task<IEnumerable<FiendViewModel>> GetFriendInvitationsAsync(string userId)
+        public async Task<IEnumerable<FriendViewModel>> GetFriendInvitationsAsync(string userId)
         {
             return await context
                 .FriendsRequests
                 .Where(x => x.Recipient.SuratUserId.ToString() == userId)
-                .Select(x => new FiendViewModel
+                .Select(x => new FriendViewModel
                 {
                     Id = x.Requester.SuratUserId.ToString(),
                     Name = $"{x.Requester.SuratUser.FirstName} {x.Requester.SuratUser.LastName}",
                 }).ToListAsync();
         }
 
-        public async Task<IEnumerable<FiendViewModel>> GetSentRequestAsync(string userId)
+        public async Task<IEnumerable<FriendViewModel>> GetSentRequestAsync(string userId)
         {
             return await context
                 .FriendsRequests
                 .Where(x => x.Requester.SuratUserId.ToString() == userId)
-                .Select(x => new FiendViewModel
+                .Select(x => new FriendViewModel
                 {
                     Id = x.Recipient.SuratUserId.ToString(),
                     Name = $"{x.Recipient.SuratUser.FirstName} {x.Recipient.SuratUser.LastName}",
@@ -81,23 +81,48 @@
         public async Task AddFriendAsync(string userId, string friendId)
         {
             var request = await context.FriendsRequests.FirstAsync(x => x.Requester.SuratUserId.ToString() == userId && x.Recipient.SuratUserId.ToString() == friendId);
+            request.AreFriends = true;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<FriendViewModel>> GetFriendsAsync(string userId)
+        {
+            return await context
+                .FriendsRequests
+                .Where(x => x.Recipient.SuratUserId.ToString() == userId || x.Requester.SuratUserId.ToString() == userId)
+                .Select(x => new FriendViewModel
+                {
+                    Id = x.Requester.SuratUserId.ToString() == userId ? x.Recipient.SuratUserId.ToString() : x.Requester.SuratUserId.ToString(),
+                    Name = x.Requester.SuratUserId.ToString() == userId ? $"{x.Recipient.SuratUser.FirstName} {x.Recipient.SuratUser.LastName}" : $"{x.Requester.SuratUser.FirstName} {x.Requester.SuratUser.LastName}"
+                }).ToListAsync();
+        }
+
+        public async Task RemoveFriendAsync(string userId, string friendId)
+        {
+            var request = await context.FriendsRequests.FirstAsync(x => (x.Requester.SuratUserId.ToString() == userId || x.Recipient.SuratUserId.ToString() == userId) && (x.Recipient.SuratUserId.ToString() == friendId || x.Requester.SuratUserId.ToString() == friendId));
             var requster = await context.FriendsRequesters.FindAsync(request.RequesterId);
             var recipient = await context.FriendsRecipients.FindAsync(request.RecipientId);
-            var userRequester = await context.Users.FindAsync(requster!.SuratUserId);
-            var userRecipient = await context.Users.FindAsync(recipient!.SuratUserId);
-            //TO DO Many-to-manu rel
-            //userRequester!.Friends.Add(userRecipient!);
-            //userRecipient!.Friends.Add(userRequester);
             context.FriendsRequests.Remove(request);
             context.FriendsRequesters.Remove(requster!);
             context.FriendsRecipients.Remove(recipient!);
             await context.SaveChangesAsync();
         }
 
-        public IEnumerable<FiendViewModel> GetFriends(string userId)
+        public async Task<string> CheckFriendship(string userId, string friendId)
         {
-            //TODO 
-            throw new NotImplementedException();
+            var request = await context.FriendsRequests.FirstOrDefaultAsync(x => (x.Requester.SuratUserId.ToString() == userId || x.Recipient.SuratUserId.ToString() == userId) && (x.Recipient.SuratUserId.ToString() == friendId || x.Requester.SuratUserId.ToString() == friendId));
+
+            if (request == null)
+            {
+                return "No friends";
+            }
+
+            if (!request.AreFriends)
+            {
+                return "Pending request";
+            }
+
+            return "Friends";
         }
     }
 }
