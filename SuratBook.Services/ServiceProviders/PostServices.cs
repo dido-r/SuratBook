@@ -47,7 +47,7 @@
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync()
+        public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId)
         {
             return await context
                 .Posts
@@ -62,12 +62,13 @@
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
                     GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
                     Likes = x.UsersLikes.Count,
-                    Comments = x.Comments.Count
+                    Comments = x.Comments.Count,
+                    IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
                 })
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id)
+        public async Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId)
         {
             return await context
                 .Posts
@@ -81,9 +82,22 @@
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
                     Likes = x.UsersLikes.Count,
-                    Comments = x.Comments.Count
+                    Comments = x.Comments.Count,
+                    IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
                 })
                 .ToListAsync();
+        }
+
+        public async Task LikePostAsync(string userId, string postId)
+        {
+            var likedPost = new UsersLikedPosts
+            {
+                SuratUserId = Guid.Parse(userId),
+                PostId = Guid.Parse(postId)
+            };
+
+            await context.UsersLikedPosts.AddAsync(likedPost);
+            await context.SaveChangesAsync();
         }
     }
 }

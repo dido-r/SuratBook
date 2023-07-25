@@ -43,7 +43,8 @@
         {
             try
             {
-                var result = await service.GetPhotosAsync(id);
+                var userId = GetUserId();
+                var result = await service.GetPhotosAsync(id, userId);
                 return Ok(result);
             }
             catch
@@ -81,6 +82,21 @@
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        [Route("like")]
+        public async Task<IActionResult> LikePhoto([FromBody] string photoId)
+        {
+            var userId = GetUserId();
+            await service.LikePhotoAsync(photoId, userId);
+            return Ok();
+        }
+
+        private string GetUserId()
+        {
+            return Request.Cookies["surat_auth"]!;
         }
     }
 }

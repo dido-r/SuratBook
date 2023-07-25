@@ -82,7 +82,8 @@ namespace SuratBook.Web.Controllers
         [Route("get-all-posts")]
         public async Task<IActionResult> GetAllPost()
         {
-            var allPosts = await services.GetAllPostsAsync();
+            var userId = GetUserId();
+            var allPosts = await services.GetAllPostsAsync(userId);
             return Ok(allPosts);
         }
 
@@ -90,8 +91,23 @@ namespace SuratBook.Web.Controllers
         [Route("get-my-posts")]
         public async Task<IActionResult> GetMyPost([FromQuery] string id)
         {
-            var myPosts = await services.GetMyPostAsync(id);
+            var userId = GetUserId();
+            var myPosts = await services.GetMyPostAsync(id, userId);
             return Ok(myPosts);
+        }
+
+        [HttpPost]
+        [Route("like")]
+        public async Task<IActionResult> LikePost([FromQuery] string postId)
+        {
+            var userId = GetUserId();
+            await services.LikePostAsync(userId, postId);
+            return Ok();
+        }
+
+        private string GetUserId()
+        {
+            return Request.Cookies["surat_auth"]!;
         }
     }
 }

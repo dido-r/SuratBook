@@ -13,5 +13,7 @@
         public int Likes { get; set; }
 
         public int Comments { get; set; }
+
+        public bool IsLiked { get; set; }
     }
 }

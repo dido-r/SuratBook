@@ -45,7 +45,7 @@
                 .AnyAsync(x => x.DropboxPath == path);
         }
 
-        public async Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id)
+        public async Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id, string userId)
         {
             return await context
                 .Photos
@@ -58,8 +58,21 @@
                     DropboxPath = x.DropboxPath,
                     Likes = x.UsersLikes.Count,
                     OwnerId = x.OwnerId.ToString(),
-                    Comments = x.Comments.Count
+                    Comments = x.Comments.Count,
+                    IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
                 }).ToListAsync();
+        }
+
+        public async Task LikePhotoAsync(string photoId, string userId)
+        {
+            var likedPhoto = new UsersLikedPhotos
+            {
+                SuratUserId = Guid.Parse(userId),
+                PhotoId = Guid.Parse(photoId)
+            };
+
+            await context.UsersLikedPhotos.AddAsync(likedPhoto);
+            await context.SaveChangesAsync();
         }
     }
 }

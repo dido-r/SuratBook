@@ -10,6 +10,8 @@ namespace SuratBook.Services.Interfaces
 
         Task DeletePhotoAsync(string id);
 
-        Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id);
+        Task LikePhotoAsync(string photoId, string userId);
+
+        Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id, string userId);
     }
 }
