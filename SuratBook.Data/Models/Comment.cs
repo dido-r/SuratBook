@@ -17,7 +17,7 @@
 
         [Required]
         [ForeignKey(nameof(Owner))]
-        public Guid OwmerId { get; set; }
+        public Guid OwnerId { get; set; }
 
         public SuratUser Owner { get; set; } = null!;
 

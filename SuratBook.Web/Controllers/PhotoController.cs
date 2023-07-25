@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Comment;
     using SuratBook.Services.Models.Photo;
 
     [Route("api/[controller]")]
@@ -92,6 +93,28 @@
             var userId = GetUserId();
             await service.LikePhotoAsync(photoId, userId);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("comment")]
+        public async Task<IActionResult> CommentPhoto(CommentFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("test");
+            }
+
+            var userId = GetUserId();
+            var comment = await service.CommentPhotoAsync(model, userId);
+            return Ok(comment);
+        }
+
+        [HttpGet]
+        [Route("get-comments")]
+        public async Task<IActionResult> GetCommentsByPhotoIdAsync([FromQuery] string photoId)
+        {
+            var comments = await service.GetPhotoCommentsAsync(photoId);
+            return Ok(comments);
         }
 
         private string GetUserId()

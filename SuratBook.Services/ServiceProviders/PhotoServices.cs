@@ -4,6 +4,7 @@
     using SuratBook.Data;
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Comment;
     using SuratBook.Services.Models.Photo;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -15,6 +16,29 @@
         public PhotoServices(SuratBookDbContext _context)
         {
             context = _context;
+        }
+
+        public async Task<CommentViewModel> CommentPhotoAsync(CommentFormModel model, string userId)
+        {
+            var comment = new Comment
+            {
+                Content = model.Content,
+                PhotoId = Guid.Parse(model.PhotoId),
+                OwnerId = Guid.Parse(userId)
+            };
+
+            await context.Comments.AddAsync(comment);
+            await context.SaveChangesAsync();
+            var owner = await context.Users.FindAsync(Guid.Parse(userId));
+            var ownerName = $"{owner!.FirstName} {owner!.LastName}";
+
+            return new CommentViewModel
+            {
+                Id = comment.Id.ToString(),
+                Content = comment.Content,
+                OwnerId = comment.OwnerId.ToString(),
+                OwnerName = ownerName
+            };
         }
 
         public async Task<string> CreatePhotoAsync(CreatePhotoModel model)
@@ -43,6 +67,20 @@
             return await context
                 .Photos
                 .AnyAsync(x => x.DropboxPath == path);
+        }
+
+        public async Task<IEnumerable<CommentViewModel>> GetPhotoCommentsAsync(string photoId)
+        {
+            return await context
+                .Comments
+                .Where(x => x.PhotoId.ToString() == photoId)
+                .Select(x => new CommentViewModel
+                {
+                    Id = x.Id.ToString(),
+                    Content = x.Content,
+                    OwnerId = x.OwnerId.ToString(),
+                    OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}"
+                }).ToListAsync();
         }
 
         public async Task<IEnumerable<PhotoViewModel>> GetPhotosAsync(string id, string userId)

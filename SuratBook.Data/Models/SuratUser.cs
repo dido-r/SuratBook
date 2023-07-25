@@ -35,8 +35,6 @@
 
         public HashSet<Post> Posts { get; set; } = new HashSet<Post>();
 
-        public HashSet<Comment> Comments { get; set; } = new HashSet<Comment>();
-
         public HashSet<Photo> Photos { get; set; } = new HashSet<Photo>();
 
         public HashSet<Group> OwnedGroups { get; set; } = new HashSet<Group>();

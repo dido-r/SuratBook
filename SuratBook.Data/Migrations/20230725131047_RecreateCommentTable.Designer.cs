@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuratBook.Data;
 
@@ -11,9 +12,10 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    partial class SuratBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725131047_RecreateCommentTable")]
+    partial class RecreateCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +175,7 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<Guid>("OwmerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PhotoId")
@@ -186,7 +188,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwmerId");
 
                     b.HasIndex("PhotoId");
 
@@ -671,7 +673,7 @@ namespace SuratBook.Data.Migrations
                 {
                     b.HasOne("SuratBook.Data.Models.SuratUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("OwmerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

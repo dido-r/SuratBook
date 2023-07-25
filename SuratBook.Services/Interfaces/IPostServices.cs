@@ -1,4 +1,5 @@
-﻿using SuratBook.Services.Models.Post;
+﻿using SuratBook.Services.Models.Comment;
+using SuratBook.Services.Models.Post;
 
 namespace SuratBook.Services.Interfaces
 {
@@ -11,6 +12,10 @@ namespace SuratBook.Services.Interfaces
         Task DeletePostAsync(DeletePostModel model);
 
         Task LikePostAsync(string userId, string postId);
+
+        Task<CommentViewModel> CommentPostAsync(CommentFormModel model, string userId);
+
+        Task<IEnumerable<CommentViewModel>> GetPostCommentsAsync(string postId);
 
         Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId);
 

@@ -22,7 +22,7 @@ namespace SuratBook.Data.Models
 
         public SuratUser Owner { get; set; } = null!;
 
-        public int Likes => Comments.Count;
+        public int Likes => UsersLikes.Count;
 
         public bool IsDeleted { get; set; } = false;
 

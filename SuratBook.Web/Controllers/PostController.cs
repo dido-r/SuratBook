@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
+using SuratBook.Services.Models.Comment;
 using SuratBook.Services.Models.Post;
 
 namespace SuratBook.Web.Controllers
@@ -103,6 +104,28 @@ namespace SuratBook.Web.Controllers
             var userId = GetUserId();
             await services.LikePostAsync(userId, postId);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("comment")]
+        public async Task<IActionResult> CommentPost(CommentFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("test");
+            }
+
+            var userId = GetUserId();
+            var comment = await services.CommentPostAsync(model, userId);
+            return Ok(comment);
+        }
+
+        [HttpGet]
+        [Route("get-comments")]
+        public async Task<IActionResult> GetPostComments([FromQuery] string postId)
+        {
+            var comments = await services.GetPostCommentsAsync(postId);
+            return Ok(comments);
         }
 
         private string GetUserId()

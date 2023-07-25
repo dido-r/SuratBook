@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuratBook.Data;
 
@@ -11,9 +12,10 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    partial class SuratBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725130749_DropCommentTable")]
+    partial class DropCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,44 +157,6 @@ namespace SuratBook.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("SuratBook.Data.Models.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PhotoId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.HasIndex("PhotoId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.Education", b =>
@@ -667,33 +631,6 @@ namespace SuratBook.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SuratBook.Data.Models.Comment", b =>
-                {
-                    b.HasOne("SuratBook.Data.Models.SuratUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SuratBook.Data.Models.Photo", "Photo")
-                        .WithMany("Comments")
-                        .HasForeignKey("PhotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SuratBook.Data.Models.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-
-                    b.Navigation("Photo");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("SuratBook.Data.Models.Education", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.UniversityDegree", "UniversityDegree")
@@ -892,15 +829,11 @@ namespace SuratBook.Data.Migrations
 
             modelBuilder.Entity("SuratBook.Data.Models.Photo", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("UsersLikes");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.Post", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("UsersLikes");
                 });
 

@@ -1,4 +1,5 @@
-﻿using SuratBook.Services.Models.Photo;
+﻿using SuratBook.Services.Models.Comment;
+using SuratBook.Services.Models.Photo;
 
 namespace SuratBook.Services.Interfaces
 {
@@ -9,6 +10,10 @@ namespace SuratBook.Services.Interfaces
         Task<bool> FindByPathAsync(string path);
 
         Task DeletePhotoAsync(string id);
+
+        Task<CommentViewModel> CommentPhotoAsync(CommentFormModel model, string userId);
+
+        Task<IEnumerable<CommentViewModel>> GetPhotoCommentsAsync(string photoId);
 
         Task LikePhotoAsync(string photoId, string userId);
 
