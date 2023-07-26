@@ -40,16 +40,11 @@ namespace SuratBook.Web.Controllers
 
         [HttpPost]
         [Route("delete-post")]
-        public async Task<IActionResult> DeletePost(DeletePostModel model)
+        public async Task<IActionResult> DeletePost([FromQuery] string postId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                await services.DeletePostAsync(model);
+                await services.DeletePostAsync(postId);
                 return Ok();
             }
             catch (Exception e)

@@ -31,6 +31,10 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Post>()
+                .Property(p => p.GroupId)
+                .IsRequired(required: false);
+
             builder
                 .Entity<FriendsRequests>()
                 .HasKey(x => new

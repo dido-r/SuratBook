@@ -9,7 +9,7 @@ namespace SuratBook.Services.Interfaces
 
         Task EditPostAsync(EditPostFormModel model);
 
-        Task DeletePostAsync(DeletePostModel model);
+        Task DeletePostAsync(string postId);
 
         Task LikePostAsync(string userId, string postId);
 

@@ -54,9 +54,9 @@
             return post.Id.ToString();
         }
 
-        public async Task DeletePostAsync(DeletePostModel model)
+        public async Task DeletePostAsync(string postId)
         {
-            var post = await context.Posts.FindAsync(Guid.Parse(model.Id)) ?? throw new ArgumentNullException();
+            var post = await context.Posts.FindAsync(Guid.Parse(postId)) ?? throw new ArgumentNullException();
             context.Posts.Remove(post);
             await context.SaveChangesAsync();
         }

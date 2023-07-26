@@ -15,7 +15,7 @@
         [Required]
         public DateTime CreatedOn { get; set; }
 
-        public string? DropboxPath { get; set; } = null!;
+        public string? DropboxPath { get; set; }
 
         [Required]
         [ForeignKey(nameof(Owner))]
