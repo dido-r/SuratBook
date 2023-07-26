@@ -20,5 +20,7 @@ namespace SuratBook.Services.Interfaces
         Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId);
 
         Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId);
+
+        Task<IEnumerable<PostViewModel>> SearchPostsAsync(string name, string userId);
     }
 }

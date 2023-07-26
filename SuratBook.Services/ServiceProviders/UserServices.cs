@@ -148,6 +148,19 @@ namespace SuratBook.Services.ServiceProviders
             };
         }
 
+        public async Task<IEnumerable<LoggedUserModel>> SearchUsersByNameAsync(string name)
+        {
+            return await context
+                .Users
+                .Where(x => name.Contains(x.FirstName) || name.Contains(x.LastName) || x.FirstName.Contains(name) || x.LastName.Contains(name))
+                .Select(x => new LoggedUserModel
+                {
+                    Id = x.Id.ToString(),
+                    Name = $"{x.FirstName} {x.LastName}"
+                })
+                .ToListAsync();
+        }
+
         public void GenerateCookie(LoggedUserModel user, HttpResponse response)
         {
             var cookieOptions = new CookieOptions()

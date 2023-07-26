@@ -214,6 +214,15 @@
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("search")]
+        public async Task<IActionResult> SearchGroups([FromQuery] string name)
+        {
+            var groups = await services.SearchGroupsByNameAsync(name);
+            return Ok(groups);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

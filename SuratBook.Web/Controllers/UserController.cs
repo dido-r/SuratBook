@@ -100,5 +100,14 @@ namespace WebApplication2.Controllers
             var user = await service.GetUserNameAsync(userId);
             return Ok(user);
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string name)
+        {
+            var users = await service.SearchUsersByNameAsync(name);
+            return Ok(users);
+        }
     }
 }

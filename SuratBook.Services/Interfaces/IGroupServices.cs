@@ -28,5 +28,7 @@ namespace SuratBook.Services.Interfaces
         Task<GroupViewModel> GetGroupDataAsync(string groupId);
 
         Task<IEnumerable<GroupMediaViewModel>> GetGroupMediaFilesAsync(string groupId);
+
+        Task<IEnumerable<GroupViewModel>> SearchGroupsByNameAsync(string name);
     }
 }

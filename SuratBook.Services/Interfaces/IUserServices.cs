@@ -15,6 +15,8 @@ namespace SuratBook.Services.Interfaces
 
         Task LogoutUserAsync();
 
+        Task<IEnumerable<LoggedUserModel>> SearchUsersByNameAsync(string name);
+
         Task<LoggedUserModel> GetUserNameAsync(string userId);
 
         void DeleteCookies(HttpResponse response);

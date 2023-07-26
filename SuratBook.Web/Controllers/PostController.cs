@@ -128,6 +128,16 @@ namespace SuratBook.Web.Controllers
             return Ok(comments);
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("search")]
+        public async Task<IActionResult> SearchPosts([FromQuery] string name)
+        {
+            var userId = GetUserId();
+            var posts = await services.SearchPostsAsync(name, userId);
+            return Ok(posts);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

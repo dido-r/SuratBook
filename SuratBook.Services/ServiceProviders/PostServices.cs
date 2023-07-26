@@ -137,5 +137,25 @@
             await context.UsersLikedPosts.AddAsync(likedPost);
             await context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<PostViewModel>> SearchPostsAsync(string name, string userId)
+        {
+            return await context
+                .Posts
+                .Where(x => x.OwnerId.ToString() != userId && (x.Description.Contains(name) || x.Owner.FirstName.Contains(name) || x.Owner.LastName.Contains(name) || name.Contains(x.Owner.FirstName) || name.Contains(x.Owner.LastName)))
+                .Select(x => new PostViewModel
+                {
+                    Key = x.Id.ToString(),
+                    Description = x.Description,
+                    DropboxPath = x.DropboxPath,
+                    OwnerId = x.OwnerId.ToString(),
+                    OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
+                    Likes = x.UsersLikes.Count,
+                    Comments = x.Comments.Count,
+                    IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
+                })
+                .ToListAsync();
+        }
     }
 }

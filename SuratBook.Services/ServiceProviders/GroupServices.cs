@@ -178,5 +178,21 @@ namespace SuratBook.Services.ServiceProviders
                     Comments = x.Comments.Count()
                 }).ToListAsync();
         }
+
+        public async Task<IEnumerable<GroupViewModel>> SearchGroupsByNameAsync(string name)
+        {
+            return await context
+                .Groups
+                .Where(x => name.Contains(x.Name) || x.Name.Contains(name))
+                .Select(x => new GroupViewModel
+                {
+                    Id = x.Id.ToString(),
+                    Name = x.Name,
+                    GroupInfo = x.GroupInfo,
+                    MainPhoto = x.MainPhoto,
+                    OwnerId = x.OwnerId.ToString()
+                })
+                .ToListAsync();
+        }
     }
 }
