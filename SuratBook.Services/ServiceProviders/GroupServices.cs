@@ -70,7 +70,9 @@ namespace SuratBook.Services.ServiceProviders
                     Id = x.Id.ToString(),
                     Name = x.Name,
                     MainPhoto = x.MainPhoto!,
-                    GroupInfo = x.GroupInfo
+                    GroupInfo = x.GroupInfo,
+                    OwnerId = x.OwnerId.ToString(),
+                    Access = x.Access.Name
                 })
                 .ToListAsync();
         }
@@ -87,6 +89,7 @@ namespace SuratBook.Services.ServiceProviders
                     GroupInfo = x.GroupInfo,
                     MainPhoto = x.MainPhoto!,
                     OwnerId = x.OwnerId.ToString(),
+                    Access = x.Access.Name
                 }).FirstAsync();
         }
 
@@ -101,6 +104,7 @@ namespace SuratBook.Services.ServiceProviders
                    MainPhoto = x.MainPhoto!,
                    GroupInfo = x.GroupInfo,
                    OwnerId = x.OwnerId.ToString(),
+                   Access = x.Access.Name
                })
                .ToListAsync();
         }
@@ -120,7 +124,19 @@ namespace SuratBook.Services.ServiceProviders
                 SuratUserId = Guid.Parse(userId)
             };
 
-            await context.AddAsync(join);
+            await context.UsersJoinedGroups.AddAsync(join);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task JoinPrivateGroupAsync(string groupId, string userId)
+        {
+            var request = new GroupJoinRequest
+            {
+                SuratUserId = Guid.Parse(userId),
+                GrouptId = Guid.Parse(groupId)
+            };
+
+            await context.GroupsJoinRequests.AddRangeAsync(request);
             await context.SaveChangesAsync();
         }
 
@@ -146,6 +162,7 @@ namespace SuratBook.Services.ServiceProviders
                     GroupInfo = x.Group.GroupInfo,
                     MainPhoto = x.Group.MainPhoto!,
                     OwnerId = x.Group.OwnerId.ToString(),
+                    Access = x.Group.Access.Name
                 })
                 .ToListAsync();
         }
@@ -190,9 +207,58 @@ namespace SuratBook.Services.ServiceProviders
                     Name = x.Name,
                     GroupInfo = x.GroupInfo,
                     MainPhoto = x.MainPhoto,
-                    OwnerId = x.OwnerId.ToString()
+                    OwnerId = x.OwnerId.ToString(),
+                    Access = x.Access.Name
                 })
                 .ToListAsync();
+        }
+
+        public async Task<bool> IsPendingJoinRequestsAsync(string groupId, string userId)
+        {
+            return await context
+                .GroupsJoinRequests
+                .AnyAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId);
+        }
+
+        public async Task<IEnumerable<RequestUserViewModel>> GetPendingJoinRequestsAsync(string groupId)
+        {
+            return await context
+                .GroupsJoinRequests
+                .Where(x => x.GrouptId.ToString() == groupId)
+                .Select(x => new RequestUserViewModel
+                {
+                    Id = x.Id.ToString(),
+                    UserId = x.SuratUserId.ToString(),
+                    Name = $"{x.SuratUser.FirstName} {x.SuratUser.LastName}",
+                    DropboxPath = x.SuratUser.MainPhoto
+                }).ToListAsync();
+        }
+
+        public async Task ApproveJoinPrivateGroupAsync(string requestId)
+        {
+            var request = await context
+                .GroupsJoinRequests
+                .FindAsync(Guid.Parse(requestId));
+
+            var join = new UsersJoinedGroups
+            {
+                GrouptId = request!.GrouptId,
+                SuratUserId = request.SuratUserId
+            };
+
+            context.GroupsJoinRequests.Remove(request);
+            await context.UsersJoinedGroups.AddAsync(join);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeclineJoinPrivateGroupAsync(string requestId)
+        {
+            var request = await context
+                .GroupsJoinRequests
+                .FindAsync(Guid.Parse(requestId));
+
+            context.GroupsJoinRequests.Remove(request);
+            await context.SaveChangesAsync();
         }
     }
 }

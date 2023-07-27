@@ -27,6 +27,7 @@
         public DbSet<UsersJoinedGroups> UsersJoinedGroups { get; set; } = null!;
         public DbSet<UsersLikedPhotos> UsersLikedPhotos { get; set; } = null!;
         public DbSet<UsersLikedPosts> UsersLikedPosts { get; set; } = null!;
+        public DbSet<GroupJoinRequest> GroupsJoinRequests { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -17,6 +17,16 @@ namespace SuratBook.Services.Interfaces
 
         Task JoinGroupAsync(string groupId, string userId);
 
+        Task JoinPrivateGroupAsync(string groupId, string userId);
+
+        Task ApproveJoinPrivateGroupAsync(string requestId);
+
+        Task DeclineJoinPrivateGroupAsync(string requestId);
+
+        Task<bool> IsPendingJoinRequestsAsync(string groupId, string userId);
+
+        Task<IEnumerable<RequestUserViewModel>> GetPendingJoinRequestsAsync(string groupId);
+
         Task LeaveGroupAsync(string groupId, string userId);
 
         Task<IEnumerable<GroupViewModel>> GetJoinedGroupAsync(string userId);

@@ -183,6 +183,85 @@
         }
 
         [HttpPost]
+        [Route("join-private")]
+        public async Task<IActionResult> JoinPrivateGroup([FromQuery] string groupId)
+        {
+            var userId = GetUserId();
+
+            try
+            {
+                await services.JoinPrivateGroupAsync(groupId, userId);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("membership-pending")]
+        public async Task<IActionResult> IsPendingJoinRequests([FromQuery] string groupId)
+        {
+            var userId = GetUserId();
+
+            try
+            {
+                var response = await services.IsPendingJoinRequestsAsync(groupId, userId);
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("pending-requests")]
+        public async Task<IActionResult> GetPendingJoinRequests([FromQuery] string groupId)
+        {
+            try
+            {
+                var response = await services.GetPendingJoinRequestsAsync(groupId);
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("approve-request")]
+        public async Task<IActionResult> ApprovePendingJoinRequests([FromQuery] string requestId)
+        {
+            try
+            {
+                await services.ApproveJoinPrivateGroupAsync(requestId);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("decline-request")]
+        public async Task<IActionResult> DeclinePendingJoinRequests([FromQuery] string requestId)
+        {
+            try
+            {
+                await services.DeclineJoinPrivateGroupAsync(requestId);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
         [Route("leave")]
         public async Task<IActionResult> LeaveGroup([FromQuery] string groupId)
         {

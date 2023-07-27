@@ -11,5 +11,7 @@
         public string MainPhoto { get; set; } = null!;
 
         public string OwnerId { get; set; } = null!;
+
+        public string Access { get; set; } = null!;
     }
 }
