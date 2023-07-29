@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
 using SuratBook.Services.Models.Comment;
 using SuratBook.Services.Models.Post;
+using SuratBook.Web.Models;
 
 namespace SuratBook.Web.Controllers
 {
@@ -24,18 +25,14 @@ namespace SuratBook.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
-            try
-            {
-                var result = await services.CreatePostAsync(model);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            var result = await services.CreatePostAsync(model);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -59,7 +56,10 @@ namespace SuratBook.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
             try

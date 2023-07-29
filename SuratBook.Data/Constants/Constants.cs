@@ -11,6 +11,7 @@
 
         public const int PostMaxLength = 800;
         public const int PostMinLength = 1;
+        public const string PostErrorMessage = "Post must be between 1 and 800 symbols long";
 
         public const int CountryMaxLength = 50;
         public const string CountryErrorMessage = "Country must be up to 50 symbols long";

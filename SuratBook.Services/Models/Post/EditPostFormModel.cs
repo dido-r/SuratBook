@@ -9,7 +9,7 @@
         public string Id { get; set; } = null!;
 
         [Required]
-        [StringLength(PostMaxLength, MinimumLength = PostMinLength)]
+        [StringLength(PostMaxLength, MinimumLength = PostMinLength, ErrorMessage = PostErrorMessage)]
         public string Description { get; set; } = null!;
     }
 }

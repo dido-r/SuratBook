@@ -6,7 +6,7 @@
     public class CreatePostFormModel
     {
         [Required]
-        [StringLength(PostMaxLength, MinimumLength = PostMinLength)]
+        [StringLength(PostMaxLength, MinimumLength = PostMinLength, ErrorMessage = PostErrorMessage)]
         public string Description { get; set; } = null!;
 
         public string? DropboxPath { get; set; } = null!;
