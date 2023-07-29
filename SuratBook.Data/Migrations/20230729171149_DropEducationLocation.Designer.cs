@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuratBook.Data;
 
@@ -11,9 +12,10 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    partial class SuratBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230729171149_DropEducationLocation")]
+    partial class DropEducationLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,30 +197,6 @@ namespace SuratBook.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("SuratBook.Data.Models.Education", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("School")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("University")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("UniversityDegreeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UniversityDegreeId");
-
-                    b.ToTable("Educations");
-                });
-
             modelBuilder.Entity("SuratBook.Data.Models.FriendRecipient", b =>
                 {
                     b.Property<Guid>("Id")
@@ -359,29 +337,6 @@ namespace SuratBook.Data.Migrations
                     b.ToTable("GroupsJoinRequests");
                 });
 
-            modelBuilder.Entity("SuratBook.Data.Models.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Town")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
-                });
-
             modelBuilder.Entity("SuratBook.Data.Models.Photo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -472,9 +427,6 @@ namespace SuratBook.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("EducationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -491,9 +443,6 @@ namespace SuratBook.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
-
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -535,10 +484,6 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EducationId");
-
-                    b.HasIndex("LocationId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -709,15 +654,6 @@ namespace SuratBook.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("SuratBook.Data.Models.Education", b =>
-                {
-                    b.HasOne("SuratBook.Data.Models.UniversityDegree", "UniversityDegree")
-                        .WithMany()
-                        .HasForeignKey("UniversityDegreeId");
-
-                    b.Navigation("UniversityDegree");
-                });
-
             modelBuilder.Entity("SuratBook.Data.Models.FriendRecipient", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.SuratUser", "SuratUser")
@@ -827,21 +763,6 @@ namespace SuratBook.Data.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("SuratBook.Data.Models.SuratUser", b =>
-                {
-                    b.HasOne("SuratBook.Data.Models.Education", "Education")
-                        .WithMany()
-                        .HasForeignKey("EducationId");
-
-                    b.HasOne("SuratBook.Data.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId");
-
-                    b.Navigation("Education");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.UsersJoinedGroups", b =>

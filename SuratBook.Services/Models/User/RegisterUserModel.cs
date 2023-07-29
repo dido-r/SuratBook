@@ -6,18 +6,17 @@
     public class RegisterUserModel
     {
         [Required]
-        [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength)]
+        [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength, ErrorMessage = FirstNameErrorMessage)]
         public string FirstName { get; set; } = null!;
 
         [Required]
-        [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength)]
+        [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength, ErrorMessage = LastNameErrorMessage)]
         public string LastName { get; set; } = null!;
 
         [Required]
         public string BirthDate { get; set; } = null!;
 
         [Required]
-        [RegularExpression("^[a-zA-Z0-9][a-zA-Z0-9_.+-]+[a-zA-Z0-9]@[a-zA-Z0-9]*[a-zA-Z0-9-]+[a-zA-Z0-9].[a-zA-Z0-9-.]+[a-zA-Z0-9]$")]
         public string Email { get; set; } = null!;
 
         [Required]

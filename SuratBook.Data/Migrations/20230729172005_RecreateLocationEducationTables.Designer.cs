@@ -12,8 +12,8 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    [Migration("20230720072351_AddGroupAccessId")]
-    partial class AddGroupAccessId
+    [Migration("20230729172005_RecreateLocationEducationTables")]
+    partial class RecreateLocationEducationTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -175,7 +175,7 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<Guid>("OwmerId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PhotoId")
@@ -188,7 +188,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwmerId");
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("PhotoId");
 
@@ -204,16 +204,15 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("School")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("University")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UniversityDegreeId")
+                    b.Property<int?>("UniversityDegreeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -236,7 +235,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasIndex("SuratUserId");
 
-                    b.ToTable("FriendRecipient");
+                    b.ToTable("FriendsRecipients");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.FriendRequester", b =>
@@ -252,7 +251,7 @@ namespace SuratBook.Data.Migrations
 
                     b.HasIndex("SuratUserId");
 
-                    b.ToTable("FriendRequester");
+                    b.ToTable("FriendsRequesters");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.FriendsRequests", b =>
@@ -262,6 +261,9 @@ namespace SuratBook.Data.Migrations
 
                     b.Property<Guid>("RecipientId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("AreFriends")
+                        .HasColumnType("bit");
 
                     b.HasKey("RequesterId", "RecipientId");
 
@@ -288,6 +290,9 @@ namespace SuratBook.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("MainPhoto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -336,6 +341,27 @@ namespace SuratBook.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SuratBook.Data.Models.GroupJoinRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GrouptId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SuratUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GrouptId");
+
+                    b.HasIndex("SuratUserId");
+
+                    b.ToTable("GroupsJoinRequests");
+                });
+
             modelBuilder.Entity("SuratBook.Data.Models.Location", b =>
                 {
                     b.Property<Guid>("Id")
@@ -343,17 +369,14 @@ namespace SuratBook.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Town")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -386,9 +409,6 @@ namespace SuratBook.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
@@ -426,9 +446,6 @@ namespace SuratBook.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
@@ -513,9 +530,6 @@ namespace SuratBook.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SuratUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -536,8 +550,6 @@ namespace SuratBook.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SuratUserId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -676,8 +688,8 @@ namespace SuratBook.Data.Migrations
             modelBuilder.Entity("SuratBook.Data.Models.Comment", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.SuratUser", "Owner")
-                        .WithMany("Comments")
-                        .HasForeignKey("OwmerId")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -771,6 +783,25 @@ namespace SuratBook.Data.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("SuratBook.Data.Models.GroupJoinRequest", b =>
+                {
+                    b.HasOne("SuratBook.Data.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GrouptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SuratBook.Data.Models.SuratUser", "SuratUser")
+                        .WithMany()
+                        .HasForeignKey("SuratUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("SuratUser");
+                });
+
             modelBuilder.Entity("SuratBook.Data.Models.Photo", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.Group", null)
@@ -788,7 +819,7 @@ namespace SuratBook.Data.Migrations
 
             modelBuilder.Entity("SuratBook.Data.Models.Post", b =>
                 {
-                    b.HasOne("SuratBook.Data.Models.Group", null)
+                    b.HasOne("SuratBook.Data.Models.Group", "Group")
                         .WithMany("Posts")
                         .HasForeignKey("GroupId");
 
@@ -797,6 +828,8 @@ namespace SuratBook.Data.Migrations
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
 
                     b.Navigation("Owner");
                 });
@@ -810,10 +843,6 @@ namespace SuratBook.Data.Migrations
                     b.HasOne("SuratBook.Data.Models.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId");
-
-                    b.HasOne("SuratBook.Data.Models.SuratUser", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("SuratUserId");
 
                     b.Navigation("Education");
 
@@ -912,10 +941,6 @@ namespace SuratBook.Data.Migrations
 
             modelBuilder.Entity("SuratBook.Data.Models.SuratUser", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Friends");
-
                     b.Navigation("LikedPhotos");
 
                     b.Navigation("LikedPosts");

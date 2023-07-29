@@ -36,6 +36,10 @@
                 .Property(p => p.GroupId)
                 .IsRequired(required: false);
 
+            builder.Entity<Education>()
+                .Property(p => p.UniversityDegreeId)
+                .IsRequired(required: false);
+
             builder
                 .Entity<FriendsRequests>()
                 .HasKey(x => new

@@ -11,7 +11,7 @@ namespace SuratBook.Services.Interfaces
 
         Task<UserInfoModel> GetUserInfoAsync(string userId);
 
-        Task EditUserInfoAsync(UserInfoFormModel model);
+        Task EditUserInfoAsync(UserInfoFormModel model, string userId);
 
         Task LogoutUserAsync();
 

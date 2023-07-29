@@ -1,24 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using static SuratBook.Data.Constants.Constants;
 
 namespace SuratBook.Services.Models.User
 {
     public class UserInfoFormModel
     {
-        public string Country { get; set; } = null!;
+        [AllowNull]
+        [StringLength(CountryMaxLength, ErrorMessage = CountryErrorMessage)]
+        public string Country { get; set; }
 
-        public string Town { get; set; } = null!;
+        [AllowNull]
+        [StringLength(TownMaxLength, ErrorMessage = TownErrorMessage)]
+        public string Town { get; set; }
 
-        public string Address { get; set; } = null!;
+        [AllowNull]
+        [StringLength(AddressMaxLength, ErrorMessage = AddressErrorMessage)]
+        public string Address { get; set; }
 
-        public string University { get; set; } = null!;
+        [AllowNull]
+        [StringLength(UniversityNameMaxLength, ErrorMessage = UniversityErrorMessage)]
+        public string University { get; set; }
 
-        [ForeignKey(nameof(UniversityDegree))]
+        [AllowNull]
         public int UniversityDegreeId { get; set; }
 
-        public UniversityDegreeViewModel UniversityDegree { get; set; } = null!;
-
-        public string School { get; set; } = null!;
-
-        public string UserId { get; set; } = null!;
+        [AllowNull]
+        [StringLength(SchoolNameMaxLength, ErrorMessage = SchoolErrorMessage)]
+        public string School { get; set; }
     }
 }

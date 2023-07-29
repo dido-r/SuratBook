@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
 using SuratBook.Services.Models.User;
+using SuratBook.Web.Models;
 
 namespace WebApplication2.Controllers
 {
@@ -32,9 +33,9 @@ namespace WebApplication2.Controllers
                 service.GenerateCookie(user, response);
                 return Ok("Successful login");
             }
-            catch (Exception e)
+            catch
             {
-                return BadRequest(e.Message);
+                return BadRequest();
             }
         }
 
@@ -44,7 +45,10 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid credentials");
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
             try
@@ -56,7 +60,10 @@ namespace WebApplication2.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return new ObjectResult(new ValidationError() { Message = $"{e.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
         }
 
@@ -85,10 +92,14 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
-            await service.EditUserInfoAsync(model);
+            var userId = GetUserId();
+            await service.EditUserInfoAsync(model, userId);
             return Ok();
         }
 
@@ -108,6 +119,11 @@ namespace WebApplication2.Controllers
         {
             var users = await service.SearchUsersByNameAsync(name);
             return Ok(users);
+        }
+
+        private string GetUserId()
+        {
+            return Request.Cookies["surat_auth"]!;
         }
     }
 }

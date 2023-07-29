@@ -8,16 +8,16 @@
     {
         public Guid Id { get; set; }
 
-        [StringLength(UniversityNameMaxLength, MinimumLength = UniversityNameMinLength)]
-        public string University { get; set; } = null!;
+        [StringLength(UniversityNameMaxLength)]
+        public string? University { get; set; }
 
         [ForeignKey(nameof(UniversityDegree))]
-        public int UniversityDegreeId { get; set; }
+        public int? UniversityDegreeId { get; set; }
 
         public UniversityDegree UniversityDegree { get; set; } = null!;
 
-        [StringLength(SchoolNameMaxLength, MinimumLength = SchoolNameMinLength)]
-        public string School { get; set; } = null!;
+        [StringLength(SchoolNameMaxLength)]
+        public string? School { get; set; }
 
     }
 }

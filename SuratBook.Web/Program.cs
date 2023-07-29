@@ -1,6 +1,7 @@
 namespace SuratBook.Web
 {
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using SuratBook.Data;
@@ -30,10 +31,7 @@ namespace SuratBook.Web
             builder.Services.AddDefaultIdentity<SuratUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
             })
                 .AddEntityFrameworkStores<SuratBookDbContext>();
             builder.Services.AddControllers();
@@ -59,6 +57,13 @@ namespace SuratBook.Web
                 };
             });
             builder.Services.AddAuthorization();
+            //
+
+            //Validation
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             //
 
             builder.Services.AddScoped<IUserServices, UserServices>();

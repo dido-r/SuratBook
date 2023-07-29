@@ -69,7 +69,7 @@ namespace SuratBook.Services.ServiceProviders
 
             if (!result.Succeeded)
             {
-                throw new ArgumentNullException("Invalid credentials");
+                throw new ArgumentException($"{result.Errors.First().Description}");
             }
 
             var jwt = GenerateJWT(suratUser);
@@ -109,29 +109,54 @@ namespace SuratBook.Services.ServiceProviders
             return userInfo!;
         }
 
-        public async Task EditUserInfoAsync(UserInfoFormModel model)
+        public async Task EditUserInfoAsync(UserInfoFormModel model, string userId)
         {
-            var location = new Location
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user.LocationId == null)
             {
-                Town = model.Town,
-                Address = model.Address,
-                Country = model.Country,
-            };
 
-            var education = new Education
+                var location = new Location
+                {
+                    Town = model.Town,
+                    Address = model.Address,
+                    Country = model.Country,
+                };
+
+                await context.Locations.AddAsync(location);
+                await context.SaveChangesAsync();
+                user.LocationId = location.Id;
+            }
+            else
             {
-                University = model.University,
-                UniversityDegreeId = model.UniversityDegree.Id,
-                School = model.School
-            };
+                var location = await context.Locations.FindAsync(user.LocationId);
+                location.Address = model.Address;
+                location.Country = model.Country;
+                location.Town = model.Town;
+            }
 
-            await context.Locations.AddAsync(location);
-            await context.Educations.AddAsync(education);
-            await context.SaveChangesAsync();
+            if (user.EducationId == null)
+            {
 
-            var user = await userManager.FindByIdAsync(model.UserId);
-            user.LocationId = location.Id;
-            user.EducationId = education.Id;
+                var education = new Education
+                {
+                    University = model.University,
+                    UniversityDegreeId = model.UniversityDegreeId != 0 ? model.UniversityDegreeId : null,
+                    School = model.School
+                };
+
+                await context.Educations.AddAsync(education);
+                await context.SaveChangesAsync();
+                user.EducationId = education.Id;
+            }
+            else
+            {
+                var education = await context.Educations.FindAsync(user.EducationId);
+                education.University = model.University;
+                education.UniversityDegreeId = model.UniversityDegreeId != 0 ? model.UniversityDegreeId : null;
+                education.School = model.School;
+            }
+
             await context.SaveChangesAsync();
         }
 

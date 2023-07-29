@@ -7,13 +7,13 @@
     {
         public Guid Id { get; set; }
 
-        [StringLength(CountryMaxLength, MinimumLength = CountryMinLength)]
-        public string Country { get; set; } = null!;
+        [StringLength(CountryMaxLength)]
+        public string? Country { get; set; }
 
-        [StringLength(TownMaxLength, MinimumLength = TownMinLength)]
-        public string Town { get; set; } = null!;
+        [StringLength(TownMaxLength)]
+        public string? Town { get; set; }
 
-        [StringLength(AddressMaxLength, MinimumLength = AddressMinLength)]
-        public string Address { get; set; } = null!;
+        [StringLength(AddressMaxLength)]
+        public string? Address { get; set; }
     }
 }
