@@ -34,7 +34,7 @@ namespace SuratBook.Services.ServiceProviders
         public async Task EditGroupInfoAsync(GroupInfoEditformModel model)
         {
             var group = await context
-                .Groups.FindAsync(Guid.Parse(model.Id)) ?? throw new ArgumentNullException("Goup doesn't exist");
+                .Groups.FindAsync(Guid.Parse(model.Id)) ?? throw new Exception("Group doesn't exist");
 
             group.Name = model.Name;
             group.GroupInfo = model.GroupInfo;
@@ -43,7 +43,7 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId)
         {
-            var posts = await context
+            return await context
                 .Posts
                 .Where(x => x.GroupId.ToString() == groupId)
                 .Select(x => new PostViewModel
@@ -56,8 +56,6 @@ namespace SuratBook.Services.ServiceProviders
                     Likes = x.Likes,
                     Comments = x.Comments.Count()
                 }).ToListAsync();
-
-            return posts;
         }
 
         public async Task<IEnumerable<GroupViewModel>> GetOwnedGroupsAsync(string userId)
@@ -144,7 +142,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             var pair = await context
                 .UsersJoinedGroups
-                .FirstOrDefaultAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId) ?? throw new ArgumentNullException();
+                .FirstOrDefaultAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId) ?? throw new Exception("Group doesn't exist");
 
             context.Remove(pair);
             await context.SaveChangesAsync();

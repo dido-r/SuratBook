@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using static SuratBook.Data.Constants.Constants;
+using static SuratBook.Data.Constants.ErrorMessages;
 
 namespace SuratBook.Services.Models.User
 {

@@ -107,7 +107,10 @@ namespace SuratBook.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("test");
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
             var userId = GetUserId();
@@ -124,7 +127,6 @@ namespace SuratBook.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("search")]
         public async Task<IActionResult> SearchPosts([FromQuery] string name)
         {

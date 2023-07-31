@@ -117,13 +117,15 @@
             return await context
                 .Comments
                 .Where(x => x.PostId.ToString() == postId)
+                .OrderBy(x => x.CreatedOn)
                 .Select(x => new CommentViewModel
                 {
                     Id = x.Id.ToString(),
                     Content = x.Content,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}"
-                }).ToListAsync();
+                })
+                .ToListAsync();
         }
 
         public async Task LikePostAsync(string userId, string postId)

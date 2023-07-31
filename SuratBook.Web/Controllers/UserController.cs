@@ -23,7 +23,7 @@ namespace WebApplication2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid credentials");
+                return BadRequest();
             }
 
             try

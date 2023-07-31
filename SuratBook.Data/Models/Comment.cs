@@ -9,7 +9,7 @@
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(CommentMaxLength, MinimumLength = CommentMinLength)]
+        [StringLength(CommentMaxLength)]
         public string Content { get; set; } = null!;
 
         [Required]

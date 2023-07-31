@@ -5,6 +5,7 @@
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Comment;
     using SuratBook.Services.Models.Photo;
+    using SuratBook.Web.Models;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -24,49 +25,31 @@
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = "Could not upload the photo" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
-            try
-            {
-                var result = await service.CreatePhotoAsync(model);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var result = await service.CreatePhotoAsync(model);
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("get-photos")]
         public async Task<IActionResult> GetPhoto([FromQuery] string id)
         {
-            try
-            {
-                var userId = GetUserId();
-                var result = await service.GetPhotosAsync(id, userId);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var userId = GetUserId();
+            var result = await service.GetPhotosAsync(id, userId);
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("exist")]
         public async Task<IActionResult> FindByPathAsync([FromQuery] string path)
         {
-            try
-            {
-                var result = await service.FindByPathAsync(path);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var result = await service.FindByPathAsync(path);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -81,7 +64,10 @@
             }
             catch
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = "Could not delete the photo" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
         }
 
@@ -101,7 +87,10 @@
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("test");
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
             var userId = GetUserId();

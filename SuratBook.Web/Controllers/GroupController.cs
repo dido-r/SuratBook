@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Group;
+    using SuratBook.Web.Models;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -23,94 +24,54 @@
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
-
-            try
-            {
-                var userId = GetUserId();
-                await services.CreateGroupAsync(model, userId);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var userId = GetUserId();
+            await services.CreateGroupAsync(model, userId);
+            return Ok();
         }
 
         [HttpGet]
         [Route("owner")]
         public async Task<IActionResult> GetOwnedGroups([FromQuery] string userId)
         {
-            try
-            {
-                var groups = await services.GetOwnedGroupsAsync(userId);
-                return Ok(groups);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var groups = await services.GetOwnedGroupsAsync(userId);
+            return Ok(groups);
         }
 
         [HttpGet]
         [Route("joined")]
         public async Task<IActionResult> GetJoinedGroups([FromQuery] string userId)
         {
-            try
-            {
-                var groups = await services.GetJoinedGroupAsync(userId);
-                return Ok(groups);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var groups = await services.GetJoinedGroupAsync(userId);
+            return Ok(groups);
         }
 
         [HttpGet]
         [Route("get-members")]
         public async Task<IActionResult> GetGroupMember([FromQuery] string groupId)
         {
-            try
-            {
-                var members = await services.GetGroupMembers(groupId);
-                return Ok(members);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var members = await services.GetGroupMembers(groupId);
+            return Ok(members);
         }
 
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllGroups()
         {
-            try
-            {
-                var groups = await services.GetAllGroupsAsync();
-                return Ok(groups);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var groups = await services.GetAllGroupsAsync();
+            return Ok(groups);
         }
 
         [HttpGet]
         [Route("posts")]
         public async Task<IActionResult> GetGroupPosts([FromQuery] string groupId)
         {
-            try
-            {
-                var posts = await services.GetGroupPostsAsync(groupId);
-                return Ok(posts);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var posts = await services.GetGroupPostsAsync(groupId);
+            return Ok(posts);
         }
 
         [HttpPost]
@@ -119,17 +80,24 @@
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
 
             try
             {
                 await services.EditGroupInfoAsync(model);
                 return Ok();
+
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
         }
 
@@ -137,15 +105,8 @@
         [Route("data")]
         public async Task<IActionResult> GetGroupData([FromQuery] string groupId)
         {
-            try
-            {
-                var data = await services.GetGroupDataAsync(groupId);
-                return Ok(data);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var data = await services.GetGroupDataAsync(groupId);
+            return Ok(data);
         }
 
         [HttpGet]
@@ -153,16 +114,8 @@
         public async Task<IActionResult> GroupMembershipCheck([FromQuery] string groupId)
         {
             var userId = GetUserId();
-
-            try
-            {
-                var data = await services.IsMember(groupId, userId);
-                return Ok(data);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var data = await services.IsMember(groupId, userId);
+            return Ok(data);
         }
 
         [HttpPost]
@@ -170,16 +123,8 @@
         public async Task<IActionResult> JoinGroup([FromQuery] string groupId)
         {
             var userId = GetUserId();
-
-            try
-            {
-                await services.JoinGroupAsync(groupId, userId);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await services.JoinGroupAsync(groupId, userId);
+            return Ok();
         }
 
         [HttpPost]
@@ -187,16 +132,8 @@
         public async Task<IActionResult> JoinPrivateGroup([FromQuery] string groupId)
         {
             var userId = GetUserId();
-
-            try
-            {
-                await services.JoinPrivateGroupAsync(groupId, userId);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await services.JoinPrivateGroupAsync(groupId, userId);
+            return Ok();
         }
 
         [HttpGet]
@@ -204,61 +141,32 @@
         public async Task<IActionResult> IsPendingJoinRequests([FromQuery] string groupId)
         {
             var userId = GetUserId();
-
-            try
-            {
-                var response = await services.IsPendingJoinRequestsAsync(groupId, userId);
-                return Ok(response);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var response = await services.IsPendingJoinRequestsAsync(groupId, userId);
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("pending-requests")]
         public async Task<IActionResult> GetPendingJoinRequests([FromQuery] string groupId)
         {
-            try
-            {
-                var response = await services.GetPendingJoinRequestsAsync(groupId);
-                return Ok(response);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var response = await services.GetPendingJoinRequestsAsync(groupId);
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("approve-request")]
         public async Task<IActionResult> ApprovePendingJoinRequests([FromQuery] string requestId)
         {
-            try
-            {
-                await services.ApproveJoinPrivateGroupAsync(requestId);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await services.ApproveJoinPrivateGroupAsync(requestId);
+            return Ok();
         }
 
         [HttpPost]
         [Route("decline-request")]
         public async Task<IActionResult> DeclinePendingJoinRequests([FromQuery] string requestId)
         {
-            try
-            {
-                await services.DeclineJoinPrivateGroupAsync(requestId);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await services.DeclineJoinPrivateGroupAsync(requestId);
+            return Ok();
         }
 
         [HttpPost]
@@ -272,9 +180,12 @@
                 await services.LeaveGroupAsync(groupId, userId);
                 return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
             }
         }
 
@@ -282,15 +193,8 @@
         [Route("get-media")]
         public async Task<IActionResult> GetGroupMediaFiles([FromQuery] string id)
         {
-            try
-            {
-                var files = await services.GetGroupMediaFilesAsync(id);
-                return Ok(files);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var files = await services.GetGroupMediaFilesAsync(id);
+            return Ok(files);
         }
 
         [HttpGet]
