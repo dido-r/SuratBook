@@ -17,9 +17,9 @@ namespace SuratBook.Services.Interfaces
 
         Task<IEnumerable<CommentViewModel>> GetPostCommentsAsync(string postId);
 
-        Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId);
+        Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId, int offset, int limit);
 
-        Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId);
+        Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId, int offset, int limit);
 
         Task<IEnumerable<PostViewModel>> SearchPostsAsync(string name, string userId);
     }

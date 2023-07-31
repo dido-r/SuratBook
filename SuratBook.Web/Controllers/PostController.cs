@@ -76,19 +76,19 @@ namespace SuratBook.Web.Controllers
 
         [HttpGet]
         [Route("get-all-posts")]
-        public async Task<IActionResult> GetAllPost()
+        public async Task<IActionResult> GetAllPost([FromQuery] int offset, int limit)
         {
             var userId = GetUserId();
-            var allPosts = await services.GetAllPostsAsync(userId);
+            var allPosts = await services.GetAllPostsAsync(userId, offset, limit);
             return Ok(allPosts);
         }
 
         [HttpGet]
         [Route("get-my-posts")]
-        public async Task<IActionResult> GetMyPost([FromQuery] string id)
+        public async Task<IActionResult> GetMyPost([FromQuery] string id, int offset, int limit)
         {
             var userId = GetUserId();
-            var myPosts = await services.GetMyPostAsync(id, userId);
+            var myPosts = await services.GetMyPostAsync(id, userId, offset, limit);
             return Ok(myPosts);
         }
 

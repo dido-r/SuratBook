@@ -71,12 +71,14 @@
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId)
+        public async Task<IEnumerable<PostViewModel>> GetAllPostsAsync(string userId, int offset, int limit)
         {
             return await context
                 .Posts
                 .Where(x => !x.IsDeleted)
                 .OrderByDescending(x => x.CreatedOn)
+                .Skip(offset)
+                .Take(limit)
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),
@@ -92,12 +94,14 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId)
+        public async Task<IEnumerable<PostViewModel>> GetMyPostAsync(string id, string userId, int offset, int limit)
         {
             return await context
                 .Posts
                 .Where(x => !x.IsDeleted && x.OwnerId.ToString() == id)
                 .OrderByDescending(x => x.CreatedOn)
+                .Skip(offset)
+                .Take(limit)
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),
