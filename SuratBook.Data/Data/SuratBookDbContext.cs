@@ -10,7 +10,7 @@
         public SuratBookDbContext(DbContextOptions<SuratBookDbContext> options)
             : base(options)
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         public DbSet<Comment> Comments { get; set; } = null!;

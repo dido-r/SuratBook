@@ -77,18 +77,20 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<GroupViewModel> GetGroupDataAsync(string groupId)
         {
-            return await context
+            var group = await context
                 .Groups
-                .Where(x => x.Id.ToString() == groupId)
-                .Select(x => new GroupViewModel
-                {
-                    Id = x.Id.ToString(),
-                    Name = x.Name,
-                    GroupInfo = x.GroupInfo,
-                    MainPhoto = x.MainPhoto!,
-                    OwnerId = x.OwnerId.ToString(),
-                    Access = x.Access.Name
-                }).FirstAsync();
+                .Include(x => x.Access)
+                .FirstOrDefaultAsync(x => x.Id.ToString() == groupId);
+
+            return new GroupViewModel
+            {
+                Id = group.Id.ToString(),
+                Name = group.Name,
+                GroupInfo = group.GroupInfo,
+                MainPhoto = group.MainPhoto!,
+                OwnerId = group.OwnerId.ToString(),
+                Access = group.Access.Name
+            };
         }
 
         public async Task<IEnumerable<GroupViewModel>> GetAllGroupsAsync()
