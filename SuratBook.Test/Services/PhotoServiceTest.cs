@@ -131,26 +131,6 @@
         public async Task GetPhotoCommentReturnType()
         {
             //Arrange
-            var comment = new Comment[] {
-                new Comment
-                {
-                    Content = "Test1",
-                    PhotoId = Guid.Parse("4344e979-7e1d-45cf-ab20-a6c0fb130aef"),
-                    OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
-                },
-                new Comment
-                {
-                    Content = "Test2",
-                    PhotoId = Guid.Parse("4344e979-7e1d-45cf-ab20-a6c0fb130aef"),
-                    OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
-                },
-                new Comment
-                {
-                    Content = "Test3",
-                    PhotoId = Guid.Parse("7f733a6e-5940-4caa-a4dd-05102d0f646c"),
-                    OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
-                }
-                };
 
             //Act
             var result = await service.GetPhotoCommentsAsync("7f733a6e-5940-4caa-a4dd-05102d0f646c");
@@ -168,21 +148,21 @@
                 {
                     Content = "Test1",
                     PhotoId = Guid.Parse("be2eb31c-1d4a-4c88-b9cb-c1fdf3d983b5"),
-                    PostId = Guid.Parse("f63f50ae-88ca-4e95-be8c-98667587546a"),
+                    PostId = Guid.NewGuid(),
                     OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
                 },
                 new Comment
                 {
                     Content = "Test2",
                     PhotoId = Guid.Parse("be2eb31c-1d4a-4c88-b9cb-c1fdf3d983b5"),
-                    PostId = Guid.Parse("f63f50ae-88ca-4e95-be8c-98667587546a"),
+                    PostId = Guid.NewGuid(),
                     OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
                 },
                 new Comment
                 {
                     Content = "Test3",
                     PhotoId = Guid.Parse("7f733a6e-5940-4caa-a4dd-05102d0f646c"),
-                    PostId = Guid.Parse("f63f50ae-88ca-4e95-be8c-98667587546a"),
+                    PostId = Guid.NewGuid(),
                     OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
                 }
             };
@@ -204,17 +184,9 @@
         public async Task GetPhotoReturnType()
         {
             //Arrange
-            var photo = new Photo
-            {
-                DropboxId = "id",
-                DropboxPath = "path",
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676")
-            };
-            db.Photos.Add(photo);
-            db.SaveChanges();
 
             //Act
-            var result = await service.GetPhotosAsync(photo.Id.ToString(), "76164e24-b0f1-42cf-96da-c5601aeb7676");
+            var result = await service.GetPhotosAsync("be2eb31c-1d4a-4c88-b9cb-c1fdf3d983b5", "76164e24-b0f1-42cf-96da-c5601aeb7676");
 
             //Assert
             Assert.That(result, Is.TypeOf<List<PhotoViewModel>>());
