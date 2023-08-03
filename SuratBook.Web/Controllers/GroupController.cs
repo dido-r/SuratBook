@@ -18,6 +18,10 @@
             services = _services;
         }
 
+        public GroupController()
+        {
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateGroup(GroupCreateFormModel model)

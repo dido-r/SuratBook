@@ -11,6 +11,11 @@ namespace SuratBook.Services.ServiceProviders
     {
         private readonly SuratBookDbContext context;
 
+        public GroupServices()
+        {
+
+        }
+
         public GroupServices(SuratBookDbContext _context)
         {
             context = _context;
