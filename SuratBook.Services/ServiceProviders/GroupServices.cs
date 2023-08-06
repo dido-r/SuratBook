@@ -11,11 +11,6 @@ namespace SuratBook.Services.ServiceProviders
     {
         private readonly SuratBookDbContext context;
 
-        public GroupServices()
-        {
-
-        }
-
         public GroupServices(SuratBookDbContext _context)
         {
             context = _context;
@@ -48,6 +43,9 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId)
         {
+            var group = await context
+                .Groups.FindAsync(Guid.Parse(groupId)) ?? throw new Exception("Group doesn't exist");
+
             return await context
                 .Posts
                 .Where(x => x.GroupId.ToString() == groupId)
@@ -85,7 +83,7 @@ namespace SuratBook.Services.ServiceProviders
             var group = await context
                 .Groups
                 .Include(x => x.Access)
-                .FirstOrDefaultAsync(x => x.Id.ToString() == groupId);
+                .FirstOrDefaultAsync(x => x.Id.ToString() == groupId) ?? throw new Exception("Group doesn't exist");
 
             return new GroupViewModel
             {
@@ -116,6 +114,9 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<bool> IsMember(string groupId, string userId)
         {
+            var group = await context
+               .Groups.FindAsync(Guid.Parse(groupId)) ?? throw new Exception("Group doesn't exist");
+
             return await context
                 .UsersJoinedGroups
                 .AnyAsync(x => x.SuratUserId.ToString() == userId && x.GrouptId.ToString() == groupId);
@@ -188,6 +189,9 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<IEnumerable<GroupMediaViewModel>> GetGroupMediaFilesAsync(string groupId)
         {
+            var group = await context
+               .Groups.FindAsync(Guid.Parse(groupId)) ?? throw new Exception("Group doesn't exist");
+
             return await context
                 .Posts
                 .Where(x => x.GroupId.ToString() == groupId)

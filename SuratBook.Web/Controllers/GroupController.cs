@@ -18,10 +18,6 @@
             services = _services;
         }
 
-        public GroupController()
-        {
-        }
-
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateGroup(GroupCreateFormModel model)
@@ -74,8 +70,19 @@
         [Route("posts")]
         public async Task<IActionResult> GetGroupPosts([FromQuery] string groupId)
         {
-            var posts = await services.GetGroupPostsAsync(groupId);
-            return Ok(posts);
+            try
+            {
+                var posts = await services.GetGroupPostsAsync(groupId);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
+
         }
 
         [HttpPost]
@@ -109,8 +116,18 @@
         [Route("data")]
         public async Task<IActionResult> GetGroupData([FromQuery] string groupId)
         {
-            var data = await services.GetGroupDataAsync(groupId);
-            return Ok(data);
+            try
+            {
+                var data = await services.GetGroupDataAsync(groupId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
         }
 
         [HttpGet]
@@ -118,8 +135,18 @@
         public async Task<IActionResult> GroupMembershipCheck([FromQuery] string groupId)
         {
             var userId = GetUserId();
-            var data = await services.IsMember(groupId, userId);
-            return Ok(data);
+            try
+            {
+                var data = await services.IsMember(groupId, userId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
         }
 
         [HttpPost]
@@ -197,8 +224,18 @@
         [Route("get-media")]
         public async Task<IActionResult> GetGroupMediaFiles([FromQuery] string id)
         {
-            var files = await services.GetGroupMediaFilesAsync(id);
-            return Ok(files);
+            try
+            {
+                var files = await services.GetGroupMediaFilesAsync(id);
+                return Ok(files);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{ex.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
         }
 
         [HttpGet]

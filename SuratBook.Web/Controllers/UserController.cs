@@ -81,8 +81,18 @@ namespace WebApplication2.Controllers
         [Route("info")]
         public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
         {
-            var response = await service.GetUserInfoAsync(userId);
-            return Ok(response);
+            try
+            {
+                var response = await service.GetUserInfoAsync(userId);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{e.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
         }
 
         [HttpPost]
@@ -108,8 +118,19 @@ namespace WebApplication2.Controllers
         [Route("get-name")]
         public async Task<IActionResult> GetUserName([FromQuery] string userId)
         {
-            var user = await service.GetUserNameAsync(userId);
-            return Ok(user);
+            try
+            {
+                var user = await service.GetUserNameAsync(userId);
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(new ValidationError() { Message = $"{e.Message}" })
+                {
+                    StatusCode = StatusCodes.Status405MethodNotAllowed
+                };
+            }
+
         }
 
         [HttpGet]

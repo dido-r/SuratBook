@@ -90,7 +90,6 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task<UserInfoModel> GetUserInfoAsync(string userId)
         {
-
             var userInfo = await context
                 .Users
                 .Where(x => x.Id.ToString() == userId)
@@ -104,7 +103,7 @@ namespace SuratBook.Services.ServiceProviders
                     UniversityDegree = x.EducationId.HasValue ? x.Education!.UniversityDegree.Name : null,
                     School = x.EducationId.HasValue ? x.Education!.School : null
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() ?? throw new Exception("No user found");
 
             return userInfo!;
         }
@@ -164,7 +163,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             var user = await context
                 .Users
-                .FindAsync(Guid.Parse(userId));
+                .FindAsync(Guid.Parse(userId)) ?? throw new Exception("No user found");
 
             return new LoggedUserModel
             {
