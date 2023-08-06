@@ -12,6 +12,8 @@
 
         public string OwnerName { get; set; } = null!;
 
+        public string? OwnerImage { get; set; }
+
         public string? GroupName { get; set; }
 
         public int Likes { get; set; }

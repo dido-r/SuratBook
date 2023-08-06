@@ -112,5 +112,24 @@
             await context.UsersLikedPhotos.AddAsync(likedPhoto);
             await context.SaveChangesAsync();
         }
+
+        public async Task SetAsProfileAsync(string userId, string path)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            user!.MainPhoto = path;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<string> GetProfileImageAsync(string userId)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            return user!.MainPhoto;
+        }
     }
 }

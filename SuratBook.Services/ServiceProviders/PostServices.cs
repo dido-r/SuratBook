@@ -86,6 +86,7 @@
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    OwnerImage = x.Owner.MainPhoto,
                     GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
                     Likes = x.UsersLikes.Count,
                     Comments = x.Comments.Count,
@@ -109,6 +110,7 @@
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    OwnerImage = x.Owner.MainPhoto,
                     Likes = x.UsersLikes.Count,
                     Comments = x.Comments.Count,
                     IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)

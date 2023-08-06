@@ -11,6 +11,10 @@ namespace SuratBook.Services.Interfaces
 
         Task DeletePhotoAsync(string id);
 
+        Task<string> GetProfileImageAsync(string userId);
+
+        Task SetAsProfileAsync(string userId, string path);
+
         Task<CommentViewModel> CommentPhotoAsync(CommentFormModel model, string userId);
 
         Task<IEnumerable<CommentViewModel>> GetPhotoCommentsAsync(string photoId);

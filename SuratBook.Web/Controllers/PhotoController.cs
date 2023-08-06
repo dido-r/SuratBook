@@ -106,6 +106,23 @@
             return Ok(comments);
         }
 
+        [HttpPost]
+        [Route("set-as-profile")]
+        public async Task SetProfilePicture([FromBody] string paht)
+        {
+            var userId = GetUserId();
+            await service.SetAsProfileAsync(userId, paht);
+        }
+
+        [HttpGet]
+        [Route("get-a-profile")]
+        public async Task<IActionResult> GetProfilePicture()
+        {
+            var userId = GetUserId();
+            var result = await service.GetProfileImageAsync(userId);
+            return Ok(result);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;
