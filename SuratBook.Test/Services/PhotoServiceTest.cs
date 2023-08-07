@@ -12,6 +12,7 @@
     {
         private SuratBookDbContext db;
         private PhotoServices service;
+        private CommentServices commentServ;
 
         [SetUp]
         public void SetUp()
@@ -27,6 +28,7 @@
             db.Users.Add(user);
             db.SaveChanges();
             service = new PhotoServices(db);
+            commentServ = new CommentServices(db);
         }
 
         [Test]
@@ -133,7 +135,7 @@
             //Arrange
 
             //Act
-            var result = await service.GetPhotoCommentsAsync("7f733a6e-5940-4caa-a4dd-05102d0f646c");
+            var result = await commentServ.GetPhotoCommentsAsync("7f733a6e-5940-4caa-a4dd-05102d0f646c");
 
             //Assert
             Assert.That(result, Is.TypeOf<List<CommentViewModel>>());
@@ -170,7 +172,7 @@
             db.SaveChanges();
 
             //Act
-            var result = await service.GetPhotoCommentsAsync("be2eb31c-1d4a-4c88-b9cb-c1fdf3d983b5");
+            var result = await commentServ.GetPhotoCommentsAsync("be2eb31c-1d4a-4c88-b9cb-c1fdf3d983b5");
 
             //Assert
             Assert.Multiple(() =>

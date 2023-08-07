@@ -1,6 +1,4 @@
-﻿using SuratBook.Services.Models.Comment;
-
-namespace SuratBook.Test.Controller
+﻿namespace SuratBook.Test.Controller
 {
     [TestFixture]
     public class PhotoControllerTest
@@ -66,25 +64,6 @@ namespace SuratBook.Test.Controller
             Assert.That(result, Is.TypeOf<OkObjectResult>());
             Assert.That(result, Is.Not.Null);
             Assert.That(data!.Value, Is.TypeOf<bool>());
-        }
-
-        [Test]
-        public async Task GetPhotoCommentsShouldReturnOkWithCommentViewModel()
-        {
-            //Arrage
-            var controller = new PhotoController(IPhotoServiceMock.Get());
-
-            //Act
-            var result = await controller.GetCommentsByPhotoIdAsync("photoId");
-            var data = result as ObjectResult;
-
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.TypeOf<OkObjectResult>());
-                Assert.That(result, Is.Not.Null);
-                Assert.That(data.Value, Is.TypeOf<CommentViewModel[]>());
-            });
         }
     }
 }

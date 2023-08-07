@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Comment;
 using SuratBook.Services.Models.Post;
 using SuratBook.Web.Models;
 
@@ -99,31 +98,6 @@ namespace SuratBook.Web.Controllers
             var userId = GetUserId();
             await services.LikePostAsync(userId, postId);
             return Ok();
-        }
-
-        [HttpPost]
-        [Route("comment")]
-        public async Task<IActionResult> CommentPost(CommentFormModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return new ObjectResult(new ValidationError() { Message = $"{ModelState.Values.First().Errors.First().ErrorMessage}" })
-                {
-                    StatusCode = StatusCodes.Status405MethodNotAllowed
-                };
-            }
-
-            var userId = GetUserId();
-            var comment = await services.CommentPostAsync(model, userId);
-            return Ok(comment);
-        }
-
-        [HttpGet]
-        [Route("get-comments")]
-        public async Task<IActionResult> GetPostComments([FromQuery] string postId)
-        {
-            var comments = await services.GetPostCommentsAsync(postId);
-            return Ok(comments);
         }
 
         [HttpGet]

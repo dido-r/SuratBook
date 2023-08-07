@@ -3,7 +3,6 @@ using SuratBook.Data.Models;
 using SuratBook.Services.Models.Comment;
 using SuratBook.Services.Models.Post;
 using SuratBook.Services.ServiceProviders;
-using SuratBook.Test.Mock;
 
 namespace SuratBook.Test.Services
 {
@@ -12,6 +11,7 @@ namespace SuratBook.Test.Services
     {
         private SuratBookDbContext db;
         private PostServices service;
+        private CommentServices commentServ;
 
         [SetUp]
         public void SetUp()
@@ -27,6 +27,7 @@ namespace SuratBook.Test.Services
             db.Users.Add(user);
             db.SaveChanges();
             service = new PostServices(db);
+            commentServ = new CommentServices(db);
         }
 
         [Test]
@@ -35,7 +36,7 @@ namespace SuratBook.Test.Services
             //Arrange
 
             //Act
-            var result = await service.GetPostCommentsAsync("4344e979-7e1d-45cf-ab20-a6c0fb130aef");
+            var result = await commentServ.GetPostCommentsAsync("4344e979-7e1d-45cf-ab20-a6c0fb130aef");
 
             //Assert
             Assert.That(result, Is.TypeOf<List<CommentViewModel>>());
@@ -72,7 +73,7 @@ namespace SuratBook.Test.Services
             db.SaveChanges();
 
             //Act
-            var result = await service.GetPostCommentsAsync("4344e979-7e1d-45cf-ab20-a6c0fb130aef");
+            var result = await commentServ.GetPostCommentsAsync("4344e979-7e1d-45cf-ab20-a6c0fb130aef");
 
             //Assert
             Assert.That(result.Any(x => x.Content == "Test1"), Is.True);

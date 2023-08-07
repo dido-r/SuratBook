@@ -10,5 +10,7 @@
 
         public string OwnerName { get; set; } = null!;
 
+        public string? OwnerImage { get; set; }
+
     }
 }

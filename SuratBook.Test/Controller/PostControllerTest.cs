@@ -1,6 +1,4 @@
-﻿using SuratBook.Services.Models.Comment;
-
-namespace SuratBook.Test.Controller
+﻿namespace SuratBook.Test.Controller
 {
     [TestFixture]
     internal class PostControllerTest
@@ -34,24 +32,6 @@ namespace SuratBook.Test.Controller
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.TypeOf<OkResult>());
-            });
-        }
-
-        [Test]
-        public async Task GetPostCommentsShouldReturnOkWithCommentsList()
-        {
-            //Arrage
-            var controller = new PostController(IPostServiceMock.Get());
-
-            //Act
-            var result = await controller.GetPostComments("postId");
-            var data = result as ObjectResult;
-
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.TypeOf<OkObjectResult>());
-                Assert.That(data.Value, Is.TypeOf<CommentViewModel[]>());
             });
         }
     }

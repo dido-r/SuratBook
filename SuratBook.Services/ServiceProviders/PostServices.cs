@@ -4,7 +4,6 @@
     using SuratBook.Data;
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
-    using SuratBook.Services.Models.Comment;
     using SuratBook.Services.Models.Post;
 
     public class PostServices : IPostServices
@@ -16,30 +15,7 @@
             context = _context;
         }
 
-        public async Task<CommentViewModel> CommentPostAsync(CommentFormModel model, string userId)
-        {
-            var comment = new Comment
-            {
-                Content = model.Content,
-                PostId = Guid.Parse(model.PhotoId),
-                OwnerId = Guid.Parse(userId)
-            };
-
-            await context.Comments.AddAsync(comment);
-            await context.SaveChangesAsync();
-            var owner = await context.Users.FindAsync(Guid.Parse(userId));
-            var ownerName = $"{owner!.FirstName} {owner!.LastName}";
-
-            return new CommentViewModel
-            {
-                Id = comment.Id.ToString(),
-                Content = comment.Content,
-                OwnerId = comment.OwnerId.ToString(),
-                OwnerName = ownerName
-            };
-        }
-
-        public async Task<string> CreatePostAsync(CreatePostFormModel model)
+        public async Task<CreatePostResponseModel> CreatePostAsync(CreatePostFormModel model)
         {
             var post = new Post
             {
@@ -51,13 +27,19 @@
 
             await context.Posts.AddAsync(post);
             await context.SaveChangesAsync();
-            return post.Id.ToString();
+            var image = context.Users.Find(Guid.Parse(model.OwnerId))!.MainPhoto;
+
+            return new CreatePostResponseModel
+            {
+                Id = post.Id.ToString(),
+                OwnerImage = image
+            };
         }
 
         public async Task DeletePostAsync(string postId)
         {
             var post = await context.Posts.FindAsync(Guid.Parse(postId)) ?? throw new ArgumentNullException();
-            context.Posts.Remove(post);
+            post.IsDeleted = true;
             await context.SaveChangesAsync();
         }
 
@@ -114,22 +96,6 @@
                     Likes = x.UsersLikes.Count,
                     Comments = x.Comments.Count,
                     IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
-                })
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<CommentViewModel>> GetPostCommentsAsync(string postId)
-        {
-            return await context
-                .Comments
-                .Where(x => x.PostId.ToString() == postId)
-                .OrderBy(x => x.CreatedOn)
-                .Select(x => new CommentViewModel
-                {
-                    Id = x.Id.ToString(),
-                    Content = x.Content,
-                    OwnerId = x.OwnerId.ToString(),
-                    OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}"
                 })
                 .ToListAsync();
         }
