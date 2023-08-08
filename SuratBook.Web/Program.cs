@@ -1,6 +1,7 @@
 namespace SuratBook.Web
 {
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,7 @@ namespace SuratBook.Web
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequiredLength = 8;
             })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SuratBookDbContext>();
             builder.Services.AddControllers();
 

@@ -7,5 +7,9 @@ namespace SuratBook.Services.Interfaces
         Task<IEnumerable<UserAdminViewModel>> GetAllUsersAsync();
 
         Task<IEnumerable<PostAdminViewModel>> GetAllPostsAsync();
+
+        Task<IEnumerable<GroupAdminViewModel>> GetAllGroupsAsync();
+
+        Task ActivateGroupAsync(string groupId);
     }
 }

@@ -7,6 +7,7 @@ using SuratBook.Data;
 using SuratBook.Data.Models;
 using SuratBook.Services.Interfaces;
 using SuratBook.Services.Models.User;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -45,7 +46,7 @@ namespace SuratBook.Services.ServiceProviders
             }
 
             var jwt = GenerateJWT(user);
-
+            
             return new LoggedUserModel
             {
                 Id = user.Id.ToString(),
@@ -170,6 +171,15 @@ namespace SuratBook.Services.ServiceProviders
                 Id = user!.Id.ToString(),
                 Name = $"{user.FirstName} {user.LastName}"
             };
+        }
+
+        public async Task<bool> isAdmin(string userId)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            return await userManager.IsInRoleAsync(user!, "Admin");
         }
 
         public async Task<IEnumerable<LoggedUserModel>> SearchUsersByNameAsync(string name)

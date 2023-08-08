@@ -31,5 +31,21 @@
             var posts = await service.GetAllPostsAsync();
             return Ok(posts);
         }
+
+        [HttpGet]
+        [Route("all-groups")]
+        public async Task<IActionResult> GetAllGroups()
+        {
+            var groups = await service.GetAllGroupsAsync();
+            return Ok(groups);
+        }
+
+        [HttpPost]
+        [Route("activate-group")]
+        public async Task<IActionResult> GetAllGroups([FromQuery] string groupId)
+        {
+            await service.ActivateGroupAsync(groupId);
+            return Ok();
+        }
     }
 }

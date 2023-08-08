@@ -94,7 +94,7 @@ namespace SuratBook.Test.Services
             var postId = db.Posts.First().Id.ToString();
 
             //Assert
-            Assert.That(result, Is.EqualTo(postId));
+            Assert.That(result.Id.ToString(), Is.EqualTo(postId));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace SuratBook.Test.Services
             var result = await service.CreatePostAsync(model);
 
             //Assert
-            Assert.That(result, Is.TypeOf<string>());
+            Assert.That(result, Is.TypeOf<CreatePostResponseModel>());
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace SuratBook.Test.Services
             await service.DeletePostAsync(post.Id.ToString());
 
             //Assert
-            Assert.That(db.Posts.Count, Is.Zero);
+            Assert.That(post.IsDeleted, Is.True);
         }
 
         [Test]

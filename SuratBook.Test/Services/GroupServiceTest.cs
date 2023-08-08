@@ -126,6 +126,12 @@
         public async Task CheckResultCountOfGetGroupPostMethod()
         {
             //Arrange
+            var group = new Group
+            {
+                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+                Name = "Name",
+                GroupInfo = "Info"
+            };
             var groupPosts = new Post[]{
                 new Post
             {
@@ -139,6 +145,7 @@
                 GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
                 OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
             }};
+            db.Groups.Add(group);
             db.Posts.AddRange(groupPosts);
             db.SaveChanges();
             var service = new GroupServices(db);
@@ -154,6 +161,12 @@
         public async Task CheckResultOfGetGroupPostMethod()
         {
             //Arrange
+            var group = new Group
+            {
+                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+                Name = "Name",
+                GroupInfo = "Info"
+            };
             var groupPosts = new Post[]{
                 new Post
             {
@@ -167,6 +180,7 @@
                 GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
                 OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
             }};
+            db.Groups.Add(group);
             db.Posts.AddRange(groupPosts);
             db.SaveChanges();
             var service = new GroupServices(db);
@@ -186,6 +200,12 @@
         public async Task CheckReturnTypeOfGetGroupPostMethod()
         {
             //Arrange
+            var group = new Group
+            {
+                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+                Name = "Name",
+                GroupInfo = "Info"
+            };
             var groupPosts = new Post[]{
                 new Post
             {
@@ -199,6 +219,7 @@
                 GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
                 OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
             }};
+            db.Groups.Add(group);
             db.Posts.AddRange(groupPosts);
             db.SaveChanges();
             var service = new GroupServices(db);
@@ -313,7 +334,7 @@
                 OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
                 AccessId = 1
             };
-            db.Add(group);
+            db.Groups.Add(group);
             db.SaveChanges();
             //Act
             var result = await service.GetGroupDataAsync(group.Id.ToString());
@@ -447,13 +468,20 @@
         public async Task IsMemberWithCorrectUserIdandGroupId()
         {
             //Arrange
+            var group = new Group
+            {
+                Id = Guid.Parse("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d"),
+                Name = "Name",
+                GroupInfo = "Info"
+            };
             var join = new UsersJoinedGroups
             {
                 SuratUserId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
                 GrouptId = Guid.Parse("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d"),
             };
-            db.UsersJoinedGroups.AddRange(join);
-            db.SaveChanges();
+            await db.Groups.AddAsync(group);
+            await db.UsersJoinedGroups.AddAsync(join);
+            await db.SaveChangesAsync();
 
             //Act
             var result = await service.IsMember("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d", "76164e24-b0f1-42cf-96da-c5601aeb7676");
@@ -466,23 +494,32 @@
         public async Task IsMemberWithInvalidUserIdorGroupId()
         {
             //Arrange
+            var group = new Group
+            {
+                Id = Guid.Parse("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d"),
+                Name = "Name",
+                GroupInfo = "Info"
+            };
             var join = new UsersJoinedGroups
             {
                 SuratUserId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
                 GrouptId = Guid.Parse("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d"),
             };
-            db.UsersJoinedGroups.AddRange(join);
-            db.SaveChanges();
+            await db.Groups.AddAsync(group);
+            await db.UsersJoinedGroups.AddAsync(join);
+            await db.SaveChangesAsync();
 
             //Act
             var invalidUser = await service.IsMember("9f01b9ee-d1f6-4e75-8ebe-1b4e4d8ac27d", "0e141566-0d1c-4ff0-9277-b4784cddad61");
-            var invalidGroup = await service.IsMember("f7baf4d3-4319-4285-8edb-313c02f729ee", "76164e24-b0f1-42cf-96da-c5601aeb7676");
 
             //Assert
             Assert.Multiple(() =>
             {
                 Assert.That(invalidUser, Is.False);
-                Assert.That(invalidGroup, Is.False);
+                Assert.Throws<AggregateException>(() =>
+                {
+                    service.IsMember("f7baf4d3-4319-4285-8edb-313c02f729ee", "76164e24-b0f1-42cf-96da-c5601aeb7676").Wait();
+                }, "Group doesn't exist");
             });
         }
 

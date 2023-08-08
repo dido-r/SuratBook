@@ -239,12 +239,19 @@
         }
 
         [HttpGet]
-        [Authorize]
         [Route("search")]
         public async Task<IActionResult> SearchGroups([FromQuery] string name)
         {
             var groups = await services.SearchGroupsByNameAsync(name);
             return Ok(groups);
+        }
+
+        [HttpPost]
+        [Route("delete-group")]
+        public async Task<IActionResult> DeleteGroup([FromQuery] string groupId)
+        {
+            await services.DeleteGroupAsync(groupId);
+            return Ok();
         }
 
         private string GetUserId()

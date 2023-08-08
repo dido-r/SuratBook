@@ -27,12 +27,12 @@
 
             await context.Posts.AddAsync(post);
             await context.SaveChangesAsync();
-            var image = context.Users.Find(Guid.Parse(model.OwnerId))!.MainPhoto;
+            var user = await context.Users.FindAsync(Guid.Parse(model.OwnerId));
 
             return new CreatePostResponseModel
             {
                 Id = post.Id.ToString(),
-                OwnerImage = image
+                OwnerImage = user.MainPhoto
             };
         }
 
@@ -116,7 +116,7 @@
         {
             return await context
                 .Posts
-                .Where(x => x.OwnerId.ToString() != userId && (x.Description.Contains(name) || x.Owner.FirstName.Contains(name) || x.Owner.LastName.Contains(name) || name.Contains(x.Owner.FirstName) || name.Contains(x.Owner.LastName)))
+                .Where(x => !x.IsDeleted && x.OwnerId.ToString() != userId && (x.Description.Contains(name) || x.Owner.FirstName.Contains(name) || x.Owner.LastName.Contains(name) || name.Contains(x.Owner.FirstName) || name.Contains(x.Owner.LastName)))
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),

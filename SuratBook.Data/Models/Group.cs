@@ -34,6 +34,8 @@
 
         public string? MainPhoto { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         public HashSet<Post> Posts { get; set; } = new HashSet<Post>();
 
         public HashSet<Photo> Photos { get; set; } = new HashSet<Photo>();

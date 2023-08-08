@@ -11,6 +11,8 @@ namespace SuratBook.Services.Interfaces
 
         Task<IEnumerable<GroupViewModel>> GetAllGroupsAsync();
 
+        Task DeleteGroupAsync(string groupId);
+
         Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId);
 
         Task<bool> IsMember(string groupId, string userId);

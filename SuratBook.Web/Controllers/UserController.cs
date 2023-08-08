@@ -142,6 +142,16 @@ namespace WebApplication2.Controllers
             return Ok(users);
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("is-admin")]
+        public async Task<IActionResult> IsAdmin()
+        {
+            var userId = GetUserId();
+            var result = await service.isAdmin(userId);
+            return Ok(result);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

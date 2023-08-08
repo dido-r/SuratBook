@@ -22,5 +22,7 @@ namespace SuratBook.Services.Interfaces
         void DeleteCookies(HttpResponse response);
 
         void GenerateCookie(LoggedUserModel user, HttpResponse response);
+
+        Task<bool> isAdmin(string userId);
     }
 }

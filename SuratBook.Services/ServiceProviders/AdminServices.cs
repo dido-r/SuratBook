@@ -14,6 +14,32 @@ namespace SuratBook.Services.ServiceProviders
             context = _context;
         }
 
+        public async Task ActivateGroupAsync(string groupId)
+        {
+            var group = await context
+                .Groups
+                .FindAsync(Guid.Parse(groupId));
+
+            group!.IsDeleted = false;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<GroupAdminViewModel>> GetAllGroupsAsync()
+        {
+            return await context
+                .Groups
+                .Select(x => new GroupAdminViewModel
+                {
+                    Id = x.Id.ToString(),
+                    Name = x.Name,
+                    GroupInfo = x.GroupInfo,
+                    CreatedOn = x.CreatedOn.ToString("dd-MM-yyyy"),
+                    MainPhoto = x.MainPhoto,
+                    IsDeleted = x.IsDeleted
+                })
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<PostAdminViewModel>> GetAllPostsAsync()
         {
             return await context

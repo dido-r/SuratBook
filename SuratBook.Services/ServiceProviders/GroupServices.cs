@@ -65,7 +65,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             return await context
                 .Groups
-                .Where(x => x.OwnerId.ToString() == userId)
+                .Where(x => x.OwnerId.ToString() == userId && !x.IsDeleted)
                 .Select(x => new GroupViewModel
                 {
                     Id = x.Id.ToString(),
@@ -100,6 +100,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             return await context
                .Groups
+               .Where(x => !x.IsDeleted)
                .Select(x => new GroupViewModel
                {
                    Id = x.Id.ToString(),
@@ -160,7 +161,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             return await context
                 .UsersJoinedGroups
-                .Where(x => x.SuratUserId.ToString() == userId)
+                .Where(x => x.SuratUserId.ToString() == userId && !x.Group.IsDeleted)
                 .Select(x => new GroupViewModel
                 {
                     Id = x.GrouptId.ToString(),
@@ -209,7 +210,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             return await context
                 .Groups
-                .Where(x => name.Contains(x.Name) || x.Name.Contains(name))
+                .Where(x => (name.Contains(x.Name) || x.Name.Contains(name)) && !x.IsDeleted)
                 .Select(x => new GroupViewModel
                 {
                     Id = x.Id.ToString(),
@@ -267,6 +268,16 @@ namespace SuratBook.Services.ServiceProviders
                 .FindAsync(Guid.Parse(requestId));
 
             context.GroupsJoinRequests.Remove(request);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteGroupAsync(string groupId)
+        {
+            var group = await context
+                .Groups
+                .FindAsync(Guid.Parse(groupId));
+
+            group!.IsDeleted = true;
             await context.SaveChangesAsync();
         }
     }
