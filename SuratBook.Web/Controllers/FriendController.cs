@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using SuratBook.Services.Interfaces;
 
     [Route("api/[controller]")]
@@ -44,6 +45,15 @@
             return Ok();
         }
 
+        [HttpPost]
+        [Route("decline")]
+        public async Task<IActionResult> RemoveFiendRequest([FromQuery] string userId)
+        {
+            var friendId = GetUserId();
+            await services.RemoveRequestAsync(userId, friendId);
+            return Ok();
+        }
+
         [HttpGet]
         [Route("sent")]
         public async Task<IActionResult> GetSentRequests()
@@ -64,9 +74,8 @@
 
         [HttpGet]
         [Route("my-friends")]
-        public async Task<IActionResult> GetFriends()
+        public async Task<IActionResult> GetFriends([FromQuery] string userId)
         {
-            var userId = GetUserId();
             var friendList = await services.GetFriendsAsync(userId);
             return Ok(friendList);
         }

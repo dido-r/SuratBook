@@ -1,7 +1,7 @@
-﻿using SuratBook.Services.Models.Admin;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Admin;
+
     public interface IAdminServices
     {
         Task<IEnumerable<UserAdminViewModel>> GetAllUsersAsync();

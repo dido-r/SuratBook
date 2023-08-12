@@ -1,6 +1,7 @@
 ﻿namespace SuratBook.Services.Models.Comment
 {
     using System.ComponentModel.DataAnnotations;
+
     using static SuratBook.Data.Constants.Constants;
     using static SuratBook.Data.Constants.ErrorMessages;
 

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SuratBook.Data;
-using SuratBook.Data.Models;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Comment;
-
-namespace SuratBook.Services.ServiceProviders
+﻿namespace SuratBook.Services.ServiceProviders
 {
+    using Microsoft.EntityFrameworkCore;
+
+    using SuratBook.Data;
+    using SuratBook.Data.Models;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Comment;
+
     public class CommentServices : ICommentServices
     {
         private SuratBookDbContext context;
@@ -43,7 +44,7 @@ namespace SuratBook.Services.ServiceProviders
         {
             return await context
                 .Comments
-                .Where(x => x.PostId.ToString() == postId)
+                .Where(x => x.PostId.ToString() == postId.ToLower())
                 .OrderBy(x => x.CreatedOn)
                 .Select(x => new CommentViewModel
                 {

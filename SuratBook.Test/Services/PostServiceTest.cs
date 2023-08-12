@@ -1,11 +1,11 @@
-﻿using SuratBook.Data;
-using SuratBook.Data.Models;
-using SuratBook.Services.Models.Comment;
-using SuratBook.Services.Models.Post;
-using SuratBook.Services.ServiceProviders;
-
-namespace SuratBook.Test.Services
+﻿namespace SuratBook.Test.Services
 {
+    using SuratBook.Data;
+    using SuratBook.Data.Models;
+    using SuratBook.Services.Models.Comment;
+    using SuratBook.Services.Models.Post;
+    using SuratBook.Services.ServiceProviders;
+
     [TestFixture]
     internal class PostServiceTest
     {

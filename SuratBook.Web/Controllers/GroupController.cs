@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Group;
     using SuratBook.Web.Models;
@@ -70,9 +71,10 @@
         [Route("posts")]
         public async Task<IActionResult> GetGroupPosts([FromQuery] string groupId)
         {
+            var userId = GetUserId();
             try
             {
-                var posts = await services.GetGroupPostsAsync(groupId);
+                var posts = await services.GetGroupPostsAsync(groupId, userId);
                 return Ok(posts);
             }
             catch (Exception ex)

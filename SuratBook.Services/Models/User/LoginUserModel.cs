@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SuratBook.Services.Models.User
+﻿namespace SuratBook.Services.Models.User
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class LoginUserModel
     {
         [Required]
-        [RegularExpression("^[a-zA-Z0-9][a-zA-Z0-9_.+-]+[a-zA-Z0-9]@[a-zA-Z0-9]*[a-zA-Z0-9-]+[a-zA-Z0-9].[a-zA-Z0-9-.]+[a-zA-Z0-9]$", ErrorMessage = "Invalid email")]
         public string Email { get; set; } = null!;
 
         [Required]

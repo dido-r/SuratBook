@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Post;
-using SuratBook.Web.Models;
-using System.Security.Claims;
-
-namespace SuratBook.Web.Controllers
+﻿namespace SuratBook.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Post;
+    using SuratBook.Web.Models;
+
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

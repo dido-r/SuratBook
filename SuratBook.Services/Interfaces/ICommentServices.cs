@@ -1,7 +1,7 @@
-﻿using SuratBook.Services.Models.Comment;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Comment;
+
     public interface ICommentServices
     {
         Task<CommentViewModel> CommentPostAsync(CommentFormModel model, string userId);

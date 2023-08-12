@@ -1,7 +1,7 @@
-﻿using SuratBook.Services.Models.Post;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Post;
+
     public interface IPostServices
     {
         Task<CreatePostResponseModel> CreatePostAsync(CreatePostFormModel model);

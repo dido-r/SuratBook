@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Photo;
     using SuratBook.Web.Models;
@@ -61,8 +62,9 @@
                 await service.DeletePhotoAsync(id);
                 return Ok();
             }
-            catch
+            catch(Exception er)
             {
+                var sd = er.Message;
                 return new ObjectResult(new ValidationError() { Message = "Could not delete the photo" })
                 {
                     StatusCode = StatusCodes.Status405MethodNotAllowed
@@ -90,9 +92,9 @@
 
         [HttpGet]
         [Route("get-a-profile")]
-        public async Task<IActionResult> GetProfilePicture()
+        public async Task<IActionResult> GetProfilePicture([FromQuery] string? userId)
         {
-            var userId = GetUserId();
+            userId ??= GetUserId();
             var result = await service.GetProfileImageAsync(userId);
             return Ok(result);
         }

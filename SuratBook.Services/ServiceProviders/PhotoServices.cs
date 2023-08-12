@@ -1,12 +1,13 @@
 ﻿namespace SuratBook.Services.ServiceProviders
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+
     using SuratBook.Data;
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Photo;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class PhotoServices : IPhotoServices
     {
@@ -34,7 +35,7 @@
         public async Task DeletePhotoAsync(string id)
         {
             var photo = await context.Photos.FindAsync(Guid.Parse(id)) ?? throw new ArgumentNullException();
-            context.Photos.Remove(photo);
+            photo.IsDeleted = true;
             await context.SaveChangesAsync();
         }
 
@@ -49,7 +50,7 @@
         {
             return await context
                 .Photos
-                .Where(x => x.OwnerId.ToString() == id)
+                .Where(x => x.OwnerId.ToString() == id && !x.IsDeleted)
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new PhotoViewModel
                 {

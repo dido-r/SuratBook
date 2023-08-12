@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.User;
-using SuratBook.Web.Models;
-
-namespace WebApplication2.Controllers
+﻿namespace WebApplication2.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.User;
+    using SuratBook.Web.Models;
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -148,7 +149,7 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> IsAdmin()
         {
             var userId = GetUserId();
-            var result = await service.isAdmin(userId);
+            var result = await service.IsAdmin(userId);
             return Ok(result);
         }
 

@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SuratBook.Data;
-using SuratBook.Data.Models;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.User;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace SuratBook.Services.ServiceProviders
+﻿namespace SuratBook.Services.ServiceProviders
 {
+    using System.Data;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+
+    using SuratBook.Data;
+    using SuratBook.Data.Models;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.User;
+
     public class UserServices : IUserServices
     {
         private SignInManager<SuratUser> signInManager;
@@ -46,7 +47,7 @@ namespace SuratBook.Services.ServiceProviders
             }
 
             var jwt = GenerateJWT(user);
-            
+
             return new LoggedUserModel
             {
                 Id = user.Id.ToString(),
@@ -173,7 +174,7 @@ namespace SuratBook.Services.ServiceProviders
             };
         }
 
-        public async Task<bool> isAdmin(string userId)
+        public async Task<bool> IsAdmin(string userId)
         {
             var user = await context
                 .Users

@@ -1,6 +1,7 @@
 ﻿namespace SuratBook.Services.ServiceProviders
 {
     using Microsoft.EntityFrameworkCore;
+
     using SuratBook.Data;
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
@@ -116,7 +117,7 @@
         {
             return await context
                 .Posts
-                .Where(x => !x.IsDeleted && x.OwnerId.ToString() != userId && (x.Description.Contains(name) || x.Owner.FirstName.Contains(name) || x.Owner.LastName.Contains(name) || name.Contains(x.Owner.FirstName) || name.Contains(x.Owner.LastName)))
+                .Where(x => !x.IsDeleted && (x.Description.Contains(name) || x.Owner.FirstName.Contains(name) || x.Owner.LastName.Contains(name) || name.Contains(x.Owner.FirstName) || name.Contains(x.Owner.LastName)))
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),
@@ -124,6 +125,7 @@
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
+                    OwnerImage = x.Owner.MainPhoto,
                     GroupName = x.GroupId.HasValue ? x.GroupId.Value.ToString() : null,
                     Likes = x.UsersLikes.Count,
                     Comments = x.Comments.Count,

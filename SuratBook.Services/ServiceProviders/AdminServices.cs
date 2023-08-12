@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SuratBook.Data;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Admin;
-
-namespace SuratBook.Services.ServiceProviders
+﻿namespace SuratBook.Services.ServiceProviders
 {
+    using Microsoft.EntityFrameworkCore;
+
+    using SuratBook.Data;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Admin;
+
     public class AdminServices : IAdminServices
     {
         private readonly SuratBookDbContext context;

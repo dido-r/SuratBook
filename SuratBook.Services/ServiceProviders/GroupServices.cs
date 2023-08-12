@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SuratBook.Data;
-using SuratBook.Data.Models;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Group;
-using SuratBook.Services.Models.Post;
-
-namespace SuratBook.Services.ServiceProviders
+﻿namespace SuratBook.Services.ServiceProviders
 {
+    using Microsoft.EntityFrameworkCore;
+
+    using SuratBook.Data;
+    using SuratBook.Data.Models;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Group;
+    using SuratBook.Services.Models.Post;
+
     public class GroupServices : IGroupServices
     {
         private readonly SuratBookDbContext context;
@@ -41,14 +42,14 @@ namespace SuratBook.Services.ServiceProviders
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId)
+        public async Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId, string userId)
         {
             var group = await context
                 .Groups.FindAsync(Guid.Parse(groupId)) ?? throw new Exception("Group doesn't exist");
 
             return await context
                 .Posts
-                .Where(x => x.GroupId.ToString() == groupId)
+                .Where(x => x.GroupId.ToString() == groupId && !x.IsDeleted)
                 .Select(x => new PostViewModel
                 {
                     Key = x.Id.ToString(),
@@ -56,8 +57,9 @@ namespace SuratBook.Services.ServiceProviders
                     DropboxPath = x.DropboxPath,
                     OwnerId = x.OwnerId.ToString(),
                     OwnerName = $"{x.Owner.FirstName} {x.Owner.LastName}",
-                    Likes = x.Likes,
-                    Comments = x.Comments.Count()
+                    Likes = x.UsersLikes.Count,
+                    Comments = x.Comments.Count(),
+                    IsLiked = x.UsersLikes.Any(z => z.SuratUserId.ToString() == userId)
                 }).ToListAsync();
         }
 
@@ -195,13 +197,13 @@ namespace SuratBook.Services.ServiceProviders
 
             return await context
                 .Posts
-                .Where(x => x.GroupId.ToString() == groupId)
+                .Where(x => x.GroupId.ToString() == groupId && !x.IsDeleted)
                 .Select(x => new GroupMediaViewModel
                 {
                     Id = x.Id.ToString(),
                     Description = x.Description,
                     DropboxPath = x.DropboxPath!,
-                    Likes = x.Likes,
+                    Likes = x.UsersLikes.Count,
                     Comments = x.Comments.Count()
                 }).ToListAsync();
         }

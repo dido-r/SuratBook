@@ -1,8 +1,8 @@
-﻿using SuratBook.Services.Models.Group;
-using SuratBook.Services.Models.Post;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Group;
+    using SuratBook.Services.Models.Post;
+
     public interface IGroupServices
     {
         Task CreateGroupAsync(GroupCreateFormModel model, string userId);
@@ -13,7 +13,7 @@ namespace SuratBook.Services.Interfaces
 
         Task DeleteGroupAsync(string groupId);
 
-        Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId);
+        Task<IEnumerable<PostViewModel>> GetGroupPostsAsync(string groupId, string userId);
 
         Task<bool> IsMember(string groupId, string userId);
 

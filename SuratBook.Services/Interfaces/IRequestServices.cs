@@ -8,6 +8,8 @@
 
         Task SendRequestAsync(string userId, string friendId);
 
+        Task RemoveRequestAsync(string userId, string friendId);
+
         Task AddFriendAsync(string userId, string friendId);
 
         Task<IEnumerable<FriendViewModel>> GetSentRequestAsync(string userId);

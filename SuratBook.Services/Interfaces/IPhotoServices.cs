@@ -1,7 +1,7 @@
-﻿using SuratBook.Services.Models.Photo;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Photo;
+
     public interface IPhotoServices
     {
         Task<string> CreatePhotoAsync(CreatePhotoModel model);

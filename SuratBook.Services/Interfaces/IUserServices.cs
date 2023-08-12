@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using SuratBook.Services.Models.User;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using Microsoft.AspNetCore.Http;
+    using SuratBook.Services.Models.User;
+
     public interface IUserServices
     {
         Task<LoggedUserModel> RegiterUserAsync(RegisterUserModel model);
@@ -23,6 +23,6 @@ namespace SuratBook.Services.Interfaces
 
         void GenerateCookie(LoggedUserModel user, HttpResponse response);
 
-        Task<bool> isAdmin(string userId);
+        Task<bool> IsAdmin(string userId);
     }
 }
