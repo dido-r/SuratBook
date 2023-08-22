@@ -9,6 +9,7 @@ namespace SuratBook.Web
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.ServiceProviders;
+    using SuratBook.Web.Hub;
     using System.Text;
 
     public class Program
@@ -16,6 +17,9 @@ namespace SuratBook.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //SignalR
+            builder.Services.AddSignalR();
 
             //CORS
             builder.Services.AddCors(x => x.AddPolicy("cors", z =>
@@ -88,6 +92,7 @@ namespace SuratBook.Web
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHub<Chat>("/chat");
 
             app.Run();
         }
