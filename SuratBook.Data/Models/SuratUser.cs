@@ -16,6 +16,8 @@
         [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength)]
         public string LastName { get; set; } = null!;
 
+        public string FullName => $"{FirstName} {LastName}";
+
         public string? MainPhoto { get; set; } = null!;
 
         [Required]

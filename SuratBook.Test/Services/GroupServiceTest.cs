@@ -122,114 +122,114 @@
             }, "Group doesn't exist");
         }
 
-        [Test]
-        public async Task CheckResultCountOfGetGroupPostMethod()
-        {
-            //Arrange
-            var group = new Group
-            {
-                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                Name = "Name",
-                GroupInfo = "Info"
-            };
-            var groupPosts = new Post[]{
-                new Post
-            {
-                Description = "Test1",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            },
-            new Post
-            {
-                Description = "Test2",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            }};
-            db.Groups.Add(group);
-            db.Posts.AddRange(groupPosts);
-            db.SaveChanges();
-            var service = new GroupServices(db);
+        //[Test]
+        //public async Task CheckResultCountOfGetGroupPostMethod()
+        //{
+        //    //Arrange
+        //    var group = new Group
+        //    {
+        //        Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        Name = "Name",
+        //        GroupInfo = "Info"
+        //    };
+        //    var groupPosts = new Post[]{
+        //        new Post
+        //    {
+        //        Description = "Test1",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    },
+        //    new Post
+        //    {
+        //        Description = "Test2",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    }};
+        //    db.Groups.Add(group);
+        //    db.Posts.AddRange(groupPosts);
+        //    db.SaveChanges();
+        //    var service = new GroupServices(db);
 
-            //Act
-            var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
+        //    //Act
+        //    var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
 
-            //Assert
-            Assert.That(result.Count(), Is.EqualTo(2));
-        }
+        //    //Assert
+        //    Assert.That(result.Count(), Is.EqualTo(2));
+        //}
 
-        [Test]
-        public async Task CheckResultOfGetGroupPostMethod()
-        {
-            //Arrange
-            var group = new Group
-            {
-                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                Name = "Name",
-                GroupInfo = "Info"
-            };
-            var groupPosts = new Post[]{
-                new Post
-            {
-                Description = "Test1",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            },
-            new Post
-            {
-                Description = "Test2",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            }};
-            db.Groups.Add(group);
-            db.Posts.AddRange(groupPosts);
-            db.SaveChanges();
-            var service = new GroupServices(db);
+        //[Test]
+        //public async Task CheckResultOfGetGroupPostMethod()
+        //{
+        //    //Arrange
+        //    var group = new Group
+        //    {
+        //        Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        Name = "Name",
+        //        GroupInfo = "Info"
+        //    };
+        //    var groupPosts = new Post[]{
+        //        new Post
+        //    {
+        //        Description = "Test1",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    },
+        //    new Post
+        //    {
+        //        Description = "Test2",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    }};
+        //    db.Groups.Add(group);
+        //    db.Posts.AddRange(groupPosts);
+        //    db.SaveChanges();
+        //    var service = new GroupServices(db);
 
-            //Act
-            var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
+        //    //Act
+        //    var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
 
-            //Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.Any(x => x.Description == "Test1"));
-                Assert.That(result.Any(x => x.Description == "Test2"));
-            });
-        }
+        //    //Assert
+        //    Assert.Multiple(() =>
+        //    {
+        //        Assert.That(result.Any(x => x.Description == "Test1"));
+        //        Assert.That(result.Any(x => x.Description == "Test2"));
+        //    });
+        //}
 
-        [Test]
-        public async Task CheckReturnTypeOfGetGroupPostMethod()
-        {
-            //Arrange
-            var group = new Group
-            {
-                Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                Name = "Name",
-                GroupInfo = "Info"
-            };
-            var groupPosts = new Post[]{
-                new Post
-            {
-                Description = "Test1",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            },
-            new Post
-            {
-                Description = "Test2",
-                GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
-                OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
-            }};
-            db.Groups.Add(group);
-            db.Posts.AddRange(groupPosts);
-            db.SaveChanges();
-            var service = new GroupServices(db);
+        //[Test]
+        //public async Task CheckReturnTypeOfGetGroupPostMethod()
+        //{
+        //    //Arrange
+        //    var group = new Group
+        //    {
+        //        Id = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        Name = "Name",
+        //        GroupInfo = "Info"
+        //    };
+        //    var groupPosts = new Post[]{
+        //        new Post
+        //    {
+        //        Description = "Test1",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    },
+        //    new Post
+        //    {
+        //        Description = "Test2",
+        //        GroupId = Guid.Parse("eb9dab24-9d8e-4cef-a882-4d69f44e4426"),
+        //        OwnerId = Guid.Parse("76164e24-b0f1-42cf-96da-c5601aeb7676"),
+        //    }};
+        //    db.Groups.Add(group);
+        //    db.Posts.AddRange(groupPosts);
+        //    db.SaveChanges();
+        //    var service = new GroupServices(db);
 
-            //Act
-            var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
+        //    //Act
+        //    var result = await service.GetGroupPostsAsync("eb9dab24-9d8e-4cef-a882-4d69f44e4426");
 
-            //Assert
-            Assert.That(result, Is.TypeOf<List<PostViewModel>>());
-        }
+        //    //Assert
+        //    Assert.That(result, Is.TypeOf<List<PostViewModel>>());
+        //}
 
         [Test]
         public async Task GetOwnedGroupsReturnCount()

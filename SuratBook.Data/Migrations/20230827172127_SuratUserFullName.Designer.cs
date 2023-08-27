@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuratBook.Data;
 
@@ -11,9 +12,10 @@ using SuratBook.Data;
 namespace SuratBook.Data.Migrations
 {
     [DbContext(typeof(SuratBookDbContext))]
-    partial class SuratBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230827172127_SuratUserFullName")]
+    partial class SuratUserFullName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,30 +157,6 @@ namespace SuratBook.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("SuratBook.Data.Models.ChatConnection", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatRoomId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConnectionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatRoomId");
-
-                    b.ToTable("ChatConnections");
                 });
 
             modelBuilder.Entity("SuratBook.Data.Models.ChatMessage", b =>
@@ -764,17 +742,6 @@ namespace SuratBook.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SuratBook.Data.Models.ChatConnection", b =>
-                {
-                    b.HasOne("SuratBook.Data.Models.ChatRoom", "ChatRoom")
-                        .WithMany("Connections")
-                        .HasForeignKey("ChatRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChatRoom");
-                });
-
             modelBuilder.Entity("SuratBook.Data.Models.ChatMessage", b =>
                 {
                     b.HasOne("SuratBook.Data.Models.ChatRoom", "ChatRoom")
@@ -1027,8 +994,6 @@ namespace SuratBook.Data.Migrations
             modelBuilder.Entity("SuratBook.Data.Models.ChatRoom", b =>
                 {
                     b.Navigation("ChatRoomParticipants");
-
-                    b.Navigation("Connections");
 
                     b.Navigation("Messages");
                 });

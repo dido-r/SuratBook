@@ -1,6 +1,6 @@
 ﻿namespace SuratBook.Web.Models
 {
-    public class ChatMessage
+    public class ChatMessageViewModel
     {
         public string UserId { get; set; } = null!;
 

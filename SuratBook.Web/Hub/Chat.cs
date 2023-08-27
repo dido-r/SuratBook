@@ -5,9 +5,9 @@
 
     public class Chat : Hub
     {
-        public async Task SendMessage(ChatMessage message)
+        public async Task SendMessage(ChatMessageViewModel message, string[] connections)
         {
-            await Clients.All.SendAsync("ReceiveMessage", message);
+                await Clients.Clients(connections).SendAsync("ReceiveMessage", message);
         }
     }
 }

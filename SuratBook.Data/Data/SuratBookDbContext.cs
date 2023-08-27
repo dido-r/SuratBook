@@ -20,6 +20,10 @@
         public DbSet<Location> Locations { get; set; } = null!;
         public DbSet<Photo> Photos { get; set; } = null!;
         public DbSet<Post> Posts { get; set; } = null!;
+        public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
+        public DbSet<ChatConnection> ChatConnections { get; set; } = null!;
+        public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+        public DbSet<ChatRoomParticipant> ChatRoomParticipants { get; set; } = null!;
         public DbSet<GroupAccess> GroupAccess { get; set; } = null!;
         public DbSet<UniversityDegree> UniversityDegrees { get; set; } = null!;
         public DbSet<FriendsRequests> FriendsRequests { get; set; } = null!;
@@ -47,6 +51,14 @@
                 {
                     x.RequesterId,
                     x.RecipientId
+                });
+
+            builder
+                .Entity<ChatRoomParticipant>()
+                .HasKey(x => new
+                {
+                    x.UserId,
+                    x.ChatRoomId
                 });
 
             builder
@@ -90,6 +102,11 @@
 
             builder
                 .Entity<Photo>()
+                .Property(h => h.CreatedOn)
+                .HasDefaultValueSql("GETDATE()");
+
+            builder
+                .Entity<ChatMessage>()
                 .Property(h => h.CreatedOn)
                 .HasDefaultValueSql("GETDATE()");
 

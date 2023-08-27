@@ -1,5 +1,6 @@
 namespace SuratBook.Web
 {
+    using Microsoft.AspNet.SignalR;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace SuratBook.Web
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.ServiceProviders;
     using SuratBook.Web.Hub;
+    using SuratBook.Web.Models;
     using System.Text;
 
     public class Program
@@ -79,6 +81,7 @@ namespace SuratBook.Web
             builder.Services.AddScoped<IRequestServices, RequestServices>();
             builder.Services.AddScoped<ICommentServices, CommentServices>();
             builder.Services.AddScoped<IAdminServices, AdminServices>();
+            builder.Services.AddScoped<IChatRoomServices, ChatRoomServices>();
 
             var app = builder.Build();
 
