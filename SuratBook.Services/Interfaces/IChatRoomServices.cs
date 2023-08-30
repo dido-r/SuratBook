@@ -11,5 +11,9 @@ namespace SuratBook.Services.Interfaces
         Task CreateConnection(ChatRoomCreateConnectionModel model, string userId);
 
         Task<IEnumerable<string>> GetConnectionsByChatId(string chatId);
+
+        Task CreateMessageAsync(ChatMessageCreateModel message);
+
+        Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId);
     }
 }

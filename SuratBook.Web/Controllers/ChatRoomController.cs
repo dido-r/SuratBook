@@ -52,6 +52,22 @@
             return Ok(connections);
         }
 
+        [HttpPost]
+        [Route("create-message")]
+        public async Task<IActionResult> CreateMEssage(ChatMessageCreateModel message)
+        {
+            await services.CreateMessageAsync(message);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("get-messages")]
+        public async Task<IActionResult> GetChatMessages([FromQuery] string chatId)
+        {
+            var messages = await services.GetChatMessages(chatId);
+            return Ok(messages);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

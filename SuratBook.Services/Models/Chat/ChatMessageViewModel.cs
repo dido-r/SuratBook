@@ -1,4 +1,4 @@
-﻿namespace SuratBook.Web.Models
+﻿namespace SuratBook.Services.Models.Chat
 {
     public class ChatMessageViewModel
     {

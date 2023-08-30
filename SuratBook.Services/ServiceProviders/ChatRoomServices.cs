@@ -45,7 +45,6 @@ namespace SuratBook.Services.ServiceProviders
                     Id = x.ChatRoomId.ToString(),
                     ChatFriendName = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.FullName,
                     ChatFriendImage = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.MainPhoto,
-                    LastMessage = x.ChatRoom.Messages.Count != 0 ? x.ChatRoom.Messages.OrderBy(d => d.CreatedOn).Last().Message : "No messages",
                 }).ToListAsync();
         }
 
@@ -90,6 +89,31 @@ namespace SuratBook.Services.ServiceProviders
                 .ChatConnections
                 .Where(x => x.ChatRoomId.ToString() == chatId)
                 .Select(x => x.ConnectionId).ToListAsync();
+        }
+
+        public async Task CreateMessageAsync(ChatMessageCreateModel message)
+        {
+            var newMessage = new ChatMessage 
+            {
+                Message = message.Message,
+                OwnerId = message.OwnerId,
+                ChatRoomId = Guid.Parse(message.ChatRoomId)
+            };
+
+            await context.ChatMessages.AddAsync(newMessage);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId)
+        {
+            return await context
+                .ChatMessages
+                .Where(x => x.ChatRoomId.ToString() == chatId)
+                .Select(x => new ChatMessageViewModel
+                { 
+                    Message = x.Message,
+                    UserId = x.OwnerId
+                }).ToListAsync();
         }
     }
 }
