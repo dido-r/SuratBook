@@ -20,6 +20,8 @@
 
         public string? MainPhoto { get; set; } = null!;
 
+        public string ConnectionId { get; set; } = string.Empty;
+
         [Required]
         public DateTime BirthDate { get; set; }
 

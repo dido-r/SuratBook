@@ -45,50 +45,27 @@ namespace SuratBook.Services.ServiceProviders
                     Id = x.ChatRoomId.ToString(),
                     ChatFriendName = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.FullName,
                     ChatFriendImage = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.MainPhoto,
+                    Notification = x.ChatRoom.Notifications
                 }).ToListAsync();
         }
 
         public async Task CreateConnection(ChatRoomCreateConnectionModel model, string userId)
         {
-            var chatRoom = context
-                .ChatRooms
-                .Include(x => x.Connections)
-                .FirstOrDefault(x => x.Id.ToString() == model.ChatRoomId);
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
 
-            var connection = chatRoom!.Connections.Any(x => x.ConnectionId == model.ConnectionId);
-
-            if (connection) 
-            {
-                return;
-            }
-
-            var currentConnection = await context
-                .ChatConnections.FirstOrDefaultAsync(x => x.UserId == userId && x.ChatRoomId.ToString() == model.ChatRoomId);  
-            
-            if (currentConnection == null)
-            {
-                var newConnection = new ChatConnection
-                {
-                    ConnectionId = model.ConnectionId,
-                    UserId = userId,
-                    ChatRoomId = Guid.Parse(model.ChatRoomId)
-                };
-
-                await context.ChatConnections.AddAsync(newConnection);
-                await context.SaveChangesAsync();
-                return;
-            }
-
-            currentConnection!.ConnectionId = model.ConnectionId;
+            user!.ConnectionId = model.ConnectionId;
             await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<string>> GetConnectionsByChatId(string chatId)
         {
             return await context
-                .ChatConnections
+                .ChatRoomParticipants
                 .Where(x => x.ChatRoomId.ToString() == chatId)
-                .Select(x => x.ConnectionId).ToListAsync();
+                .Select(x => x.SuratUser.ConnectionId)
+                .ToListAsync();
         }
 
         public async Task CreateMessageAsync(ChatMessageCreateModel message)
@@ -104,16 +81,29 @@ namespace SuratBook.Services.ServiceProviders
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId)
+        public async Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId, int offset, int messageLimit)
         {
             return await context
                 .ChatMessages
                 .Where(x => x.ChatRoomId.ToString() == chatId)
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip(offset)
+                .Take(messageLimit)
                 .Select(x => new ChatMessageViewModel
                 { 
                     Message = x.Message,
                     UserId = x.OwnerId
                 }).ToListAsync();
+        }
+
+        public async Task SetNotificationAsync(string chatId, string param)
+        {
+            var chat = await context
+                .ChatRooms
+                .FindAsync(Guid.Parse(chatId));
+
+            chat!.Notifications = param == "on";
+            await context.SaveChangesAsync();
         }
     }
 }

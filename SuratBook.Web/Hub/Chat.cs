@@ -10,9 +10,9 @@
             await Clients.Clients(connections).SendAsync("ReceiveMessage", message);
         }
 
-        //public async Task SendNotification(string currentChatId, string connection)
-        //{
-        //    await Clients.Client(connection).SendAsync("ReceiveNotification", currentChatId);
-        //}
+        public async Task SendNotification(string currentChatId, string connection)
+        {
+            await Clients.Client(connection).SendAsync("ReceiveNotification", currentChatId);
+        }
     }
 }

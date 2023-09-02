@@ -21,7 +21,6 @@
         public DbSet<Photo> Photos { get; set; } = null!;
         public DbSet<Post> Posts { get; set; } = null!;
         public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
-        public DbSet<ChatConnection> ChatConnections { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public DbSet<ChatRoomParticipant> ChatRoomParticipants { get; set; } = null!;
         public DbSet<GroupAccess> GroupAccess { get; set; } = null!;

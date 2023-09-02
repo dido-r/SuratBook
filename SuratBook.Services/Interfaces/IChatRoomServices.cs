@@ -14,6 +14,8 @@ namespace SuratBook.Services.Interfaces
 
         Task CreateMessageAsync(ChatMessageCreateModel message);
 
-        Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId);
+        Task<IEnumerable<ChatMessageViewModel>> GetChatMessages(string chatId, int offset, int messageLimit);
+
+        Task SetNotificationAsync(string chatId, string param);
     }
 }

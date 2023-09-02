@@ -62,10 +62,18 @@
 
         [HttpGet]
         [Route("get-messages")]
-        public async Task<IActionResult> GetChatMessages([FromQuery] string chatId)
+        public async Task<IActionResult> GetChatMessages([FromQuery] string chatId, int offset, int messageLimit)
         {
-            var messages = await services.GetChatMessages(chatId);
+            var messages = await services.GetChatMessages(chatId, offset, messageLimit);
             return Ok(messages);
+        }
+
+        [HttpPost]
+        [Route("set-notification")]
+        public async Task<IActionResult> SetNotification([FromQuery] string chatId, string param)
+        {
+           await services.SetNotificationAsync(chatId, param);
+           return Ok();
         }
 
         private string GetUserId()

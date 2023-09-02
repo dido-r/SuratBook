@@ -7,5 +7,7 @@
         public string ChatFriendName { get; set; } = null!;
 
         public string? ChatFriendImage { get; set; }
+
+        public bool Notification { get; set; }
     }
 }
