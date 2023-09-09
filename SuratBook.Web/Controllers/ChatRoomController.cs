@@ -17,13 +17,22 @@
             services = _services;
         }
 
+        [HttpGet]
+        [Route("exist")]
+        public async Task<IActionResult> IsChatExisting([FromQuery] string receiverId)
+        {
+            var senderId = GetUserId();
+            var isExisting = await services.IsChatExisting(senderId, receiverId);
+            return Ok(isExisting);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateChatRoom([FromQuery] string receiverId)
         {
             var senderId = GetUserId();
-            await services.CreateChatRoom(senderId, receiverId);
-            return Ok();
+            var chat = await services.CreateChatRoom(senderId, receiverId);
+            return Ok(chat);
         }
 
         [HttpGet]

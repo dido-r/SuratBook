@@ -153,6 +153,16 @@
             return Ok(result);
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var userId = GetUserId();
+            var result = await service.GetAllUsersAsync(userId);
+            return Ok(result);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

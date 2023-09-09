@@ -1,10 +1,12 @@
-﻿using SuratBook.Services.Models.Chat;
-
-namespace SuratBook.Services.Interfaces
+﻿namespace SuratBook.Services.Interfaces
 {
+    using SuratBook.Services.Models.Chat;
+
     public interface IChatRoomServices
     {
-        Task CreateChatRoom(string senderId, string receiverId);
+        Task<ChatHistoryViewModel> CreateChatRoom(string senderId, string receiverId);
+
+        Task<string> IsChatExisting(string senderId, string receiverId);
 
         Task<IEnumerable<ChatHistoryViewModel>> GetAllChatRoomsByUserIdAsync(string userId);
 

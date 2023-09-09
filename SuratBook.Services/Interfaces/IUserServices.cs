@@ -17,6 +17,8 @@
 
         Task<IEnumerable<LoggedUserModel>> SearchUsersByNameAsync(string name);
 
+        Task<IEnumerable<LoggedUserModel>> GetAllUsersAsync(string userId);
+
         Task<LoggedUserModel> GetUserNameAsync(string userId);
 
         void DeleteCookies(HttpResponse response);

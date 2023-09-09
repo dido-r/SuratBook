@@ -4,6 +4,7 @@
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
+    using System.Xml.Linq;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -192,6 +193,19 @@
                 {
                     Id = x.Id.ToString(),
                     Name = $"{x.FirstName} {x.LastName}"
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<LoggedUserModel>> GetAllUsersAsync(string userId)
+        {
+            return await context
+                .Users
+                .Where(x => x.Id.ToString() != userId)
+                .Select(x => new LoggedUserModel
+                {
+                    Id = x.Id.ToString(),
+                    Name = x.FullName
                 })
                 .ToListAsync();
         }

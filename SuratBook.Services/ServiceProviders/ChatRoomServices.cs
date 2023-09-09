@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SuratBook.Data;
-using SuratBook.Data.Models;
-using SuratBook.Services.Interfaces;
-using SuratBook.Services.Models.Chat;
-using System.Threading.Tasks;
-
-namespace SuratBook.Services.ServiceProviders
+﻿namespace SuratBook.Services.ServiceProviders
 {
+    using Microsoft.EntityFrameworkCore;
+    using SuratBook.Data;
+    using SuratBook.Data.Models;
+    using SuratBook.Services.Interfaces;
+    using SuratBook.Services.Models.Chat;
+
     public class ChatRoomServices : IChatRoomServices
     {
         private SuratBookDbContext context;
@@ -16,7 +15,17 @@ namespace SuratBook.Services.ServiceProviders
             context = _context;
         }
 
-        public async Task CreateChatRoom(string senderId, string receiverId)
+        public async Task<string> IsChatExisting(string senderId, string receiverId)
+        {
+            var isExist = await context
+                .ChatRooms
+                .Where(x => x.ChatRoomParticipants.Any(p => p.UserId.ToString() == senderId))
+                .FirstOrDefaultAsync(x => x.ChatRoomParticipants.Any(p => p.UserId.ToString() == receiverId));
+
+            return isExist != null ? isExist.Id.ToString() : "do not exist";
+        }
+
+        public async Task<ChatHistoryViewModel> CreateChatRoom(string senderId, string receiverId)
         {
             var chat = new ChatRoom();
             await context.ChatRooms.AddAsync(chat);
@@ -33,6 +42,18 @@ namespace SuratBook.Services.ServiceProviders
             };
             await context.ChatRoomParticipants.AddRangeAsync(sender, receiver);
             await context.SaveChangesAsync();
+
+            var friend = await context
+                .Users
+                .FindAsync(Guid.Parse(receiverId));
+
+            return new ChatHistoryViewModel
+            {
+                Id = chat.Id.ToString(),
+                ChatFriendName = friend!.FullName,
+                ChatFriendImage = friend.MainPhoto,
+                Notification = chat.Notifications
+            };
         }
 
         public async Task<IEnumerable<ChatHistoryViewModel>> GetAllChatRoomsByUserIdAsync(string userId)
@@ -40,8 +61,8 @@ namespace SuratBook.Services.ServiceProviders
             return await context
                 .ChatRoomParticipants
                 .Where(x => x.UserId.ToString() == userId)
-                .Select(x => new ChatHistoryViewModel 
-                { 
+                .Select(x => new ChatHistoryViewModel
+                {
                     Id = x.ChatRoomId.ToString(),
                     ChatFriendName = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.FullName,
                     ChatFriendImage = x.ChatRoom.ChatRoomParticipants.First(u => u.UserId.ToString() != userId).SuratUser.MainPhoto,
@@ -70,7 +91,7 @@ namespace SuratBook.Services.ServiceProviders
 
         public async Task CreateMessageAsync(ChatMessageCreateModel message)
         {
-            var newMessage = new ChatMessage 
+            var newMessage = new ChatMessage
             {
                 Message = message.Message,
                 OwnerId = message.OwnerId,
@@ -90,7 +111,7 @@ namespace SuratBook.Services.ServiceProviders
                 .Skip(offset)
                 .Take(messageLimit)
                 .Select(x => new ChatMessageViewModel
-                { 
+                {
                     Message = x.Message,
                     UserId = x.OwnerId
                 }).ToListAsync();
