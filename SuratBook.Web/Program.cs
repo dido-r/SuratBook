@@ -1,16 +1,18 @@
 namespace SuratBook.Web
 {
+    using System.Text;
+
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
+
     using SuratBook.Data;
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.ServiceProviders;
     using SuratBook.Web.Hub;
-    using System.Text;
 
     public class Program
     {
@@ -82,7 +84,7 @@ namespace SuratBook.Web
             builder.Services.AddScoped<IChatRoomServices, ChatRoomServices>();
 
             var app = builder.Build();
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -94,6 +96,7 @@ namespace SuratBook.Web
 
             app.MapControllers();
             app.MapHub<Chat>("/chat");
+            app.MapHub<OnlineUsers>("/online-users");
 
             app.Run();
         }

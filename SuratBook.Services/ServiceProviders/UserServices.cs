@@ -4,7 +4,6 @@
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
-    using System.Xml.Linq;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -47,6 +46,8 @@
                 throw new ArgumentNullException("Invalid credentials");
             }
 
+            user.Online = true;
+            await context.SaveChangesAsync();
             var jwt = GenerateJWT(user);
 
             return new LoggedUserModel
@@ -86,8 +87,11 @@
             };
         }
 
-        public async Task LogoutUserAsync()
+        public async Task LogoutUserAsync(string userId)
         {
+            var user = await userManager.FindByIdAsync(userId);
+            user.Online = false;
+            await context.SaveChangesAsync();
             await signInManager.SignOutAsync();
         }
 
@@ -208,6 +212,28 @@
                     Name = x.FullName
                 })
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<LoggedUserModel>> GetOnlineUsersAsync(string userId)
+        {
+            return await context
+                .Users
+                .Where(x => x.Id.ToString() != userId && x.Online)
+                .Select(x => new LoggedUserModel
+                {
+                    Id = x.Id.ToString(),
+                    Name = x.FullName
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> IsOnline(string userId)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            return user.Online;
         }
 
         public void GenerateCookie(LoggedUserModel user, HttpResponse response)

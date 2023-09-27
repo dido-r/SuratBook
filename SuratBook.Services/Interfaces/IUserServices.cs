@@ -13,11 +13,13 @@
 
         Task EditUserInfoAsync(UserInfoFormModel model, string userId);
 
-        Task LogoutUserAsync();
+        Task LogoutUserAsync(string userId);
 
         Task<IEnumerable<LoggedUserModel>> SearchUsersByNameAsync(string name);
 
         Task<IEnumerable<LoggedUserModel>> GetAllUsersAsync(string userId);
+
+        Task<IEnumerable<LoggedUserModel>> GetOnlineUsersAsync(string userId);
 
         Task<LoggedUserModel> GetUserNameAsync(string userId);
 
@@ -26,5 +28,7 @@
         void GenerateCookie(LoggedUserModel user, HttpResponse response);
 
         Task<bool> IsAdmin(string userId);
+
+        Task<bool> IsOnline(string userId);
     }
 }

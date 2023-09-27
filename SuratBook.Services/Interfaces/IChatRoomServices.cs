@@ -6,6 +6,8 @@
     {
         Task<ChatHistoryViewModel> CreateChatRoom(string senderId, string receiverId);
 
+        Task<ChatHistoryViewModel> AddChatRoom(string chatId, string userId);
+
         Task<string> IsChatExisting(string senderId, string receiverId);
 
         Task<IEnumerable<ChatHistoryViewModel>> GetAllChatRoomsByUserIdAsync(string userId);

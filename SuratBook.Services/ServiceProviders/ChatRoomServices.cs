@@ -56,6 +56,21 @@
             };
         }
 
+        public async Task<ChatHistoryViewModel> AddChatRoom(string chatId, string userId)
+        {
+            return await context
+                .ChatRooms
+                .Where(x => x.Id.ToString() == chatId)
+                .Select(x => new ChatHistoryViewModel
+                {
+                    Id = x.Id.ToString(),
+                    ChatFriendName = x.ChatRoomParticipants.First(z => z.UserId.ToString() != userId).SuratUser.FullName,
+                    ChatFriendImage = x.ChatRoomParticipants.First(z => z.UserId.ToString() != userId).SuratUser.MainPhoto,
+                    Notification = true
+                })
+                .FirstAsync();
+        }
+
         public async Task<IEnumerable<ChatHistoryViewModel>> GetAllChatRoomsByUserIdAsync(string userId)
         {
             return await context

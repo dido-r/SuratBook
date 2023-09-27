@@ -35,6 +35,15 @@
             return Ok(chat);
         }
 
+        [HttpPost]
+        [Route("add")]
+        public async Task<IActionResult> AddChatRoom([FromQuery] string chatId)
+        {
+            var userId = GetUserId();
+            var chat = await services.AddChatRoom(chatId, userId);
+            return Ok(chat);
+        }
+
         [HttpGet]
         [Route("get")]
         public async Task<IActionResult> GetChatRooms()

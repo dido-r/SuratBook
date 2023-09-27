@@ -72,9 +72,10 @@
         [Route("logout")]
         public async Task Logout()
         {
+            var userId = GetUserId();
             var response = Response;
             service.DeleteCookies(response);
-            await service.LogoutUserAsync();
+            await service.LogoutUserAsync(userId);
         }
 
         [HttpGet]
@@ -160,6 +161,26 @@
         {
             var userId = GetUserId();
             var result = await service.GetAllUsersAsync(userId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("get-online-users")]
+        public async Task<IActionResult> GetOnlineUsers()
+        {
+            var userId = GetUserId();
+            var result = await service.GetOnlineUsersAsync(userId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("is-online")]
+        public async Task<IActionResult> IsUserOnline()
+        {
+            var userId = GetUserId();
+            var result = await service.IsOnline(userId);
             return Ok(result);
         }
 

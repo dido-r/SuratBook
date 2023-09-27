@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuratBook.Data", "SuratBook
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuratBook.Services", "SuratBook.Services\SuratBook.Services.csproj", "{63515276-0EE1-45A5-8036-071FD2E26B56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuratBook.Test", "SuratBook.Test\SuratBook.Test.csproj", "{90F52505-53B7-4098-8A79-AC2FFD987258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuratBook.Test", "SuratBook.Test\SuratBook.Test.csproj", "{90F52505-53B7-4098-8A79-AC2FFD987258}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
