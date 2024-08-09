@@ -30,5 +30,7 @@
         Task<bool> IsAdmin(string userId);
 
         Task<bool> IsOnline(string userId);
+
+        Task<bool> SetOnline(string userId);
     }
 }

@@ -46,8 +46,6 @@
                 throw new ArgumentNullException("Invalid credentials");
             }
 
-            user.Online = true;
-            await context.SaveChangesAsync();
             var jwt = GenerateJWT(user);
 
             return new LoggedUserModel
@@ -232,6 +230,18 @@
             var user = await context
                 .Users
                 .FindAsync(Guid.Parse(userId));
+
+            return user.Online;
+        }
+
+        public async Task<bool> SetOnline(string userId)
+        {
+            var user = await context
+                .Users
+                .FindAsync(Guid.Parse(userId));
+
+            user.Online = true;
+            await context.SaveChangesAsync();
 
             return user.Online;
         }

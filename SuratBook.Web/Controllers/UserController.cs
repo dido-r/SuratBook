@@ -184,6 +184,16 @@
             return Ok(result);
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("set-online")]
+        public async Task<IActionResult> SetUserOnline()
+        {
+            var userId = GetUserId();
+            var result = await service.SetOnline(userId);
+            return Ok(result);
+        }
+
         private string GetUserId()
         {
             return Request.Cookies["surat_auth"]!;

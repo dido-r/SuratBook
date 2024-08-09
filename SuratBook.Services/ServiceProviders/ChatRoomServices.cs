@@ -5,6 +5,7 @@
     using SuratBook.Data.Models;
     using SuratBook.Services.Interfaces;
     using SuratBook.Services.Models.Chat;
+    using System.Security.Cryptography.X509Certificates;
 
     public class ChatRoomServices : IChatRoomServices
     {
@@ -99,6 +100,7 @@
         {
             return await context
                 .ChatRoomParticipants
+                .AsNoTracking()
                 .Where(x => x.ChatRoomId.ToString() == chatId)
                 .Select(x => x.SuratUser.ConnectionId)
                 .ToListAsync();
@@ -125,10 +127,12 @@
                 .OrderByDescending(x => x.CreatedOn)
                 .Skip(offset)
                 .Take(messageLimit)
+                .OrderBy(x => x.CreatedOn)
                 .Select(x => new ChatMessageViewModel
                 {
                     Message = x.Message,
-                    UserId = x.OwnerId
+                    UserId = x.OwnerId,
+                    ChatRoomId = x.ChatRoomId.ToString(),
                 }).ToListAsync();
         }
 
